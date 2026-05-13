@@ -1,40 +1,40 @@
 /****************************************************************
  * Objetivo: Arquivo responsável pela validação, tratamento e
- *          Manipulação de dados para o CRUD de genero
+ *          Manipulação de dados para o CRUD de 
  * Data: 08/05/2026
  * Autor: Matheus Aguiar
  * Versão: 1.1
 ****************************************************************/
 
-//Import do arquivo de padronização de mensagens
+
 const config_message = require('../modulo/configMessages.js') 
 
-//Import do arquivo DAO para fazer o CRUD do genero no banco de dados
-const generoDAO = require('../../model/DAO/genero/genero.js')
 
-//Inserindo novo genero
-const inserirNovoGenero = async function(genero, contentType){
+const nacionalidadeDAO = require('../../model/DAO/nacionalidade/nacionalidade.js')
+
+
+const inserirNovaNacionalidade = async function(nacionalidade, contentType){
 
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
     if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-    let validar = await validarDados(genero)
+    let validar = await validarDados(nacionalidade)
 
     if(validar){
         return validar // 400
     }
     else{
 
-        let result = await generoDAO.insertGenero(genero)
+        let result = await nacionalidadeDAO.insertNacionalidade(nacionalidade)
 
         if(result){ // 201
-            genero.id = result
+            nacionalidade.id = result
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
-            message.DEFAULT_MESSAGE.response    = genero
+            message.DEFAULT_MESSAGE.response    = nacionalidade
         }else{ // 500
             return message.ERROR_INTERNAL_SERVER_MODEL // 500
         }
@@ -49,30 +49,29 @@ const inserirNovoGenero = async function(genero, contentType){
     }
 }
 
-//Atualizando algum tipo de genero
-const atualizarGenero = async function(genero, id, contentType){
+const atualizarNacionalidade = async function(nacionalidade, id, contentType){
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
 
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-            let resultBuscarID = await buscarGenero(id)
+            let resultBuscarID = await buscarByIdNacionalidade(id)
             
             if(resultBuscarID.status){
-                let validar = await validarDados(genero, contentType)
+                let validar = await validarDados(nacionalidade, contentType)
  
                 if(!validar){
 
-                    genero.id = id
+                    nacionalidade.id = id
 
-                    let result = await generoDAO.updateGenero(genero)
+                    let result = await nacionalidadeDAO.updateNacionalidade(nacionalidade)
 
                     if(result){
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
                         message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
                         message.DEFAULT_MESSAGE.message     = message.SUCESS_UPDATED_ITEM.message
-                        message.DEFAULT_MESSAGE.response    = genero
+                        message.DEFAULT_MESSAGE.response    = nacionalidade
                         return message.DEFAULT_MESSAGE //200 (Atualizado)
                     }else{
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -93,26 +92,23 @@ const atualizarGenero = async function(genero, id, contentType){
     
 }
 
-//Função para retornar todos os Generos
-const listarGenero = async function(){
+const listarNacionalidade = async function(){
 
-    //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
     try {
-        //Chama a função DAO para retornar a lista de todos os Generos
-        let result = await generoDAO.selectAllGenero()
+        
+        let result = await nacionalidadeDAO.selectAllNacionalidade()
 
-        //Validação para verificar se DAO conseguiu processar os dados
         if(result){
-            //Validação para verificar se existe conteúdo no array
+            
             if(result.length > 0 ){
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
-                message.DEFAULT_MESSAGE.response.genero = result
+                message.DEFAULT_MESSAGE.response.nacionalidade = result
 
-                return message.DEFAULT_MESSAGE //200 (Dados do Generos)
+                return message.DEFAULT_MESSAGE //200 
 
             }else return message.ERROR_NOT_FOUND //404  
 
@@ -123,8 +119,7 @@ const listarGenero = async function(){
     }
 }
 
-//Função para buscar um Generos pelo id
-const buscarGenero = async function(id){
+const buscarByIdNacionalidade = async function(id){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -134,13 +129,13 @@ const buscarGenero = async function(id){
             message.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
             return message.ERROR_BAD_REQUEST // 400
         }else{
-            let result = await generoDAO.selectByIdGenero(id)
+            let result = await nacionalidadeDAO.selectByIdNacionalidade(id)
 
             if(result){
                 if(result.length > 0){
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                    message.DEFAULT_MESSAGE.response.genero  = result
+                    message.DEFAULT_MESSAGE.response.nacionalidade  = result
 
                     return message.DEFAULT_MESSAGE //200
                 }else{
@@ -153,19 +148,17 @@ const buscarGenero = async function(id){
             return message.ERROR_INTERNAL_SERVER_CONTROLLER
         }
 }
-
-//Função para excluir um Generos 
-const excluirGenero = async function(id){
+const excluirByIdNacionalidade = async function(id){
     let message = JSON.parse(JSON.stringify(config_message))
 
     try{
         //Validação do erro 400 e do 404
-        let resultBuscarID = await buscarGenero(id)
 
-        //Validação para verificar se o status é verdadeiro(se existe o Generos)
+        let resultBuscarID = await buscarByIdNacionalidade(id)
+
         if(resultBuscarID.status){
-            //Chamar a função do DAO para excluir o Generos
-            let result = await generoDAO.deleteGenero(id)
+            
+            let result = await nacionalidadeDAO.deleteByIdNacionalidade(id)
 
             if(result){
                 return  message.SUCESS_DELETED_ITEM //200 (Registro excluido)
@@ -181,28 +174,22 @@ const excluirGenero = async function(id){
     }
 }
 
-//Função para validar todos os dados de Generos (obrigatórios, qtde de caracteres, etc)
-const validarDados = async function(genero){
-     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
+const validarDados = async function(nacionalidade){
     let message = JSON.parse(JSON.stringify(config_message))
 
-    //Validação de dados para os atributos do Generos (status 400)
-    if(genero.tipo == undefined || genero.tipo == '' || genero.tipo == null || genero.tipo.length <= 30){
+    //Validação de dados para os atributos (status 400)
+    if(nacionalidade.nome_pais == undefined || nacionalidade.nome_pais == '' || nacionalidade.nome_pais == null || nacionalidade.nome_pais.length > 100){
         message.ERROR_BAD_REQUEST.field = '[TIPO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
-        
-    }else if(genero.descricao == undefined || genero.descricao == '' || genero.descricao == null){
-        message.ERROR_BAD_REQUEST.field = '[DESCRIÇÃO] INVÁLIDO'
-        return message.ERROR_BAD_REQUEST
     }else{
         return false
     }
 }
 
 module.exports = {
-    inserirNovoGenero,
-    listarGenero,
-    buscarGenero,
-    excluirGenero,
-    atualizarGenero
+    inserirNovaNacionalidade,
+    listarNacionalidade,
+    buscarByIdNacionalidade,
+    excluirByIdNacionalidade,
+    atualizarNacionalidade
 }

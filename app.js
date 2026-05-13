@@ -6,6 +6,9 @@ const bodyParser    = require('body-parser')
 const controllerFilme = require('./controller/filme/controller_filme.js')
 const controllerGenero = require('./controller/genero/controller_genero.js')
 const controllerClassificacao = require('./controller/classificacao_indicativa/controller_classificacao.js')
+const controllerIdioma = require('./controller/idioma/controller_idioma.js')
+const controllerNacionalidade = require('./controller/nacionalidade/controller_nacionalidade.js')
+const controllerTipoTelefone = require('./controller/tipoTelefone/controller_tipoTelefone.js')
 //Criando um objeto para manipular dados do body da API em formato JSON
 const bodyParserJSON = bodyParser.json()
 
@@ -20,6 +23,10 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 //ENDPOINTS
+
+// =========================================
+// ENDPOINTS DE FILME
+// =========================================
 
 //Endpoint para inserir um filme 
 app.post('/v1/senai/locadora/filme', bodyParserJSON, async function(request, response){
@@ -81,6 +88,10 @@ app.delete('/v1/senai/locadora/filme/:id', async function (request, response) {
     response.json(result)
     
 })
+
+// =========================================
+// ENDPOINTS DE GÊNERO
+// =========================================
 
 //Endpoint para inserir um genero 
 app.post('/v1/senai/locadora/genero', bodyParserJSON, async function(request, response){
@@ -203,6 +214,208 @@ app.delete('/v1/senai/locadora/classificacao/:id', async function(request, respo
     let id = request.params.id
 
     let result = await controllerClassificacao.excluirClassificacao(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// =========================================
+// ENDPOINTS DE IDIOMAS
+// =========================================
+
+
+// Endpoint para inserir idioma
+app.post('/v1/senai/locadora/idioma', bodyParserJSON, async function(request, response){
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerIdioma.inserirNovoIdioma(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para listar idiomas
+app.get('/v1/senai/locadora/idioma', async function(request, response){
+
+    let result = await controllerIdioma.listarIdioma()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para buscar idioma pelo ID
+app.get('/v1/senai/locadora/idioma/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerIdioma.buscarIdioma(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para atualizar idioma
+app.put('/v1/senai/locadora/idioma/:id', bodyParserJSON, async function(request, response){
+
+    let id = request.params.id
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerIdioma.atualizarIdioma(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para deletar idioma
+app.delete('/v1/senai/locadora/idioma/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerIdioma.excluirIdioma(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// =========================================
+// ENDPOINTS DE NACIONALIDADE
+// =========================================
+
+// Endpoint para inserir nacionalidade
+app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(request, response){
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerNacionalidade.inserirNovaNacionalidade(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para listar nacionalidades
+app.get('/v1/senai/locadora/nacionalidade', async function(request, response){
+
+    let result = await controllerNacionalidade.listarNacionalidade()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para buscar nacionalidade pelo ID
+app.get('/v1/senai/locadora/nacionalidade/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerNacionalidade.buscarByIdNacionalidade(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para atualizar nacionalidade
+app.put('/v1/senai/locadora/nacionalidade/:id', bodyParserJSON, async function(request, response){
+
+    let id = request.params.id
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerNacionalidade.atualizarNacionalidade(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para deletar nacionalidade
+app.delete('/v1/senai/locadora/nacionalidade/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerNacionalidade.excluirByIdNacionalidade(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// =========================================
+// ENDPOINTS DE TIPO TELEFONE
+// =========================================
+
+// Endpoint para inserir tipo telefone
+app.post('/v1/senai/tipo-telefone', bodyParserJSON, async function(request, response){
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerTipoTelefone.inserirTipoTelefone(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para listar tipos de telefone
+app.get('/v1/senai/tipo-telefone', async function(request, response){
+
+    let result = await controllerTipoTelefone.listarTipoTelefone()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para buscar tipo telefone pelo ID
+app.get('/v1/senai/tipo-telefone/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerTipoTelefone.buscarTipoTelefone(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para atualizar tipo telefone
+app.put('/v1/senai/tipo-telefone/:id', bodyParserJSON, async function(request, response){
+
+    let id = request.params.id
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerTipoTelefone.atualizarTipoTelefone(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para deletar tipo telefone
+app.delete('/v1/senai/tipo-telefone/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerTipoTelefone.excluirTipoTelefone(id)
 
     response.status(result.status_code)
     response.json(result)
