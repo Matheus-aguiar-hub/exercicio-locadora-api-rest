@@ -187,7 +187,7 @@ const validarDados = async function(genero){
     let message = JSON.parse(JSON.stringify(config_message))
 
     //Validação de dados para os atributos do Generos (status 400)
-    if(genero.tipo == undefined || genero.tipo == '' || genero.tipo == null || genero.tipo.length <= 30){
+    if(genero.tipo == undefined || genero.tipo == '' || genero.tipo == null || genero.tipo.length > 30){
         message.ERROR_BAD_REQUEST.field = '[TIPO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
         

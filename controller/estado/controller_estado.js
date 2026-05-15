@@ -10,31 +10,31 @@
 const config_message = require('../modulo/configMessages.js') 
 
 
-const idiomaDAO = require('../../model/DAO/idioma/idioma.js')
+const estadoDAO = require('../../model/DAO/estado/estado.js')
 
 
-const inserirNovoIdioma = async function(idioma, contentType){
+const inserirNovoEstado = async function(estado, contentType){
 
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
     if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-    let validar = await validarDados(idioma)
+    let validar = await validarDados(estado)
 
     if(validar){
         return validar // 400
     }
     else{
 
-        let result = await idiomaDAO.insertIdioma(idioma)
+        let result = await estadoDAO.insertEstado(estado)
 
         if(result){ // 201
-            idioma.id = result
+            estado.id = result
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
-            message.DEFAULT_MESSAGE.response    = idioma
+            message.DEFAULT_MESSAGE.response    = estado
         }else{ // 500
             return message.ERROR_INTERNAL_SERVER_MODEL // 500
         }
@@ -49,29 +49,29 @@ const inserirNovoIdioma = async function(idioma, contentType){
     }
 }
 
-const atualizarIdioma = async function(idioma, id, contentType){
+const atualizarEstado = async function(estado, id, contentType){
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
 
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-            let resultBuscarID = await buscarIdioma(id)
+            let resultBuscarID = await buscarByIdEstado(id)
             
             if(resultBuscarID.status){
-                let validar = await validarDados(idioma, contentType)
+                let validar = await validarDados(estado, contentType)
  
                 if(!validar){
 
-                    idioma.id = id
+                    estado.id = id
 
-                    let result = await idiomaDAO.updateIdioma(idioma)
+                    let result = await estadoDAO.updateEstado(estado)
 
                     if(result){
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
                         message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
                         message.DEFAULT_MESSAGE.message     = message.SUCESS_UPDATED_ITEM.message
-                        message.DEFAULT_MESSAGE.response    = idioma
+                        message.DEFAULT_MESSAGE.response    = estado
                         return message.DEFAULT_MESSAGE //200 (Atualizado)
                     }else{
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -92,13 +92,13 @@ const atualizarIdioma = async function(idioma, id, contentType){
     
 }
 
-const listarIdioma = async function(){
+const listarEstado = async function(){
 
     let message = JSON.parse(JSON.stringify(config_message))
 
     try {
         
-        let result = await idiomaDAO.selectAllIdioma()
+        let result = await estadoDAO.selectAllEstado()
 
         if(result){
             
@@ -106,7 +106,7 @@ const listarIdioma = async function(){
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
-                message.DEFAULT_MESSAGE.response.idioma = result
+                message.DEFAULT_MESSAGE.response.estado = result
 
                 return message.DEFAULT_MESSAGE //200 
 
@@ -119,7 +119,7 @@ const listarIdioma = async function(){
     }
 }
 
-const buscarIdioma = async function(id){
+const buscarByIdEstado = async function(id){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -129,13 +129,13 @@ const buscarIdioma = async function(id){
             message.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
             return message.ERROR_BAD_REQUEST // 400
         }else{
-            let result = await idiomaDAO.selectByIdIdioma(id)
+            let result = await estadoDAO.selectByIdEstado(id)
 
             if(result){
                 if(result.length > 0){
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                    message.DEFAULT_MESSAGE.response.idioma  = result
+                    message.DEFAULT_MESSAGE.response.estado  = result
 
                     return message.DEFAULT_MESSAGE //200
                 }else{
@@ -148,17 +148,17 @@ const buscarIdioma = async function(id){
             return message.ERROR_INTERNAL_SERVER_CONTROLLER
         }
 }
-const excluirIdioma = async function(id){
+const excluirByIdEstado = async function(id){
     let message = JSON.parse(JSON.stringify(config_message))
 
     try{
         //Validação do erro 400 e do 404
 
-        let resultBuscarID = await buscarIdioma(id)
+        let resultBuscarID = await buscarByIdEstado(id)
 
         if(resultBuscarID.status){
             
-            let result = await idiomaDAO.deleteByIdioma(id)
+            let result = await estadoDAO.deleteByIdEstado(id)
 
             if(result){
                 return  message.SUCESS_DELETED_ITEM //200 (Registro excluido)
@@ -174,26 +174,25 @@ const excluirIdioma = async function(id){
     }
 }
 
-const validarDados = async function(idioma){
+const validarDados = async function(estado){
     let message = JSON.parse(JSON.stringify(config_message))
 
     //Validação de dados para os atributos (status 400)
-    if(idioma.nome == undefined || idioma.nome == '' || idioma.nome == null || idioma.nome.length > 100){
+    if(estado.nome == undefined || estado.nome == '' || estado.nome == null || estado.nome.length > 35){
         message.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
-        
-    }else if(idioma.sigla == undefined || idioma.sigla == '' || idioma.sigla == null || idioma.sigla.length > 8){
+    }else if(estado.sigla == undefined || estado.sigla == '' || estado.sigla == null || estado.sigla.length > 3){
         message.ERROR_BAD_REQUEST.field = '[SIGLA] INVÁLIDO'
-        return message.ERROR_BAD_REQUEST
+        return message.ERROR_BAD_REQUES
     }else{
         return false
     }
 }
 
 module.exports = {
-    inserirNovoIdioma,
-    listarIdioma,
-    buscarIdioma,
-    excluirIdioma,
-    atualizarIdioma
+    inserirNovoEstado,
+    listarEstado,
+    buscarByIdEstado,
+    excluirByIdEstado,
+    atualizarEstado
 }

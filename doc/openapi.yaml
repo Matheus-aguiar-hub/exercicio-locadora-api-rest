@@ -1,0 +1,467 @@
+
+openapi: 3.0.3
+
+info:
+  title: Projeto do Filmes DS2M - Matheus Aguiar
+  description: API destinada para controlar Filmes
+  version: 1.0.4.26
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+
+# =========================================
+#                   FILME
+# =========================================
+
+  /v1/senai/locadora/filme:
+    get:
+      tags:
+        - FILME
+      summary: Listar filmes
+      responses:
+        '200':
+          description: Lista de filmes
+
+    post:
+      tags:
+        - FILME
+      summary: Inserir filme
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+      responses:
+        '201':
+          description: Filme criado
+
+  /v1/senai/locadora/filme/{id}:
+    get:
+      tags:
+        - FILME
+      summary: Buscar filme por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Filme encontrado
+
+    put:
+      tags:
+        - FILME
+      summary: Atualizar filme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+      responses:
+        '200':
+          description: Filme atualizado
+
+    delete:
+      tags:
+        - FILME
+      summary: Excluir filme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Filme excluído
+
+# =========================================
+# CLASSIFICACAO
+# =========================================
+
+  /v1/senai/classificacao:
+    get:
+      tags:
+        - CLASSIFICACAO
+      summary: Listar classificações
+      responses:
+        '200':
+          description: Lista de classificações
+
+    post:
+      tags:
+        - CLASSIFICACAO
+      summary: Inserir classificação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classificacao'
+      responses:
+        '201':
+          description: Classificação criada
+
+  /v1/senai/classificacao/{id}:
+    get:
+      tags:
+        - CLASSIFICACAO
+      summary: Buscar classificação por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Classificação encontrada
+
+    put:
+      tags:
+        - CLASSIFICACAO
+      summary: Atualizar classificação
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classificacao'
+      responses:
+        '200':
+          description: Classificação atualizada
+
+    delete:
+      tags:
+        - CLASSIFICACAO
+      summary: Excluir classificação
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Classificação excluída
+
+# =========================================
+# ESTADO
+# =========================================
+
+  /v1/senai/estado:
+    get:
+      tags:
+        - ESTADO
+      summary: Listar estados
+      responses:
+        '200':
+          description: Lista de estados
+
+    post:
+      tags:
+        - ESTADO
+      summary: Inserir estado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Estado'
+      responses:
+        '201':
+          description: Estado criado
+
+  /v1/senai/estado/{id}:
+    get:
+      tags:
+        - ESTADO
+      summary: Buscar estado por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Estado encontrado
+
+    put:
+      tags:
+        - ESTADO
+      summary: Atualizar estado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Estado'
+      responses:
+        '200':
+          description: Estado atualizado
+
+    delete:
+      tags:
+        - ESTADO
+      summary: Excluir estado
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Estado excluído
+
+# =========================================
+# GENERO
+# =========================================
+
+  /v1/senai/locadora/genero:
+    get:
+      tags:
+        - GENERO
+      summary: Listar gêneros
+      responses:
+        '200':
+          description: Lista de gêneros
+
+    post:
+      tags:
+        - GENERO
+      summary: Inserir gênero
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+      responses:
+        '201':
+          description: Gênero criado
+
+  /v1/senai/locadora/genero/{id}:
+    get:
+      tags:
+        - GENERO
+      summary: Buscar gênero por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Gênero encontrado
+
+    put:
+      tags:
+        - GENERO
+      summary: Atualizar gênero
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+      responses:
+        '200':
+          description: Gênero atualizado
+
+    delete:
+      tags:
+        - GENERO
+      summary: Excluir gênero
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Gênero excluído
+
+# =========================================
+# IDIOMA
+# =========================================
+
+  /v1/senai/idioma:
+    get:
+      tags:
+        - IDIOMA
+      summary: Listar idiomas
+      responses:
+        '200':
+          description: Lista de idiomas
+
+    post:
+      tags:
+        - IDIOMA
+      summary: Inserir idioma
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+      responses:
+        '201':
+          description: Idioma criado
+
+# =========================================
+# NACIONALIDADE
+# =========================================
+
+  /v1/senai/nacionalidade:
+    get:
+      tags:
+        - NACIONALIDADE
+      summary: Listar nacionalidades
+      responses:
+        '200':
+          description: Lista de nacionalidades
+
+    post:
+      tags:
+        - NACIONALIDADE
+      summary: Inserir nacionalidade
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nacionalidade'
+      responses:
+        '201':
+          description: Nacionalidade criada
+
+# =========================================
+# TIPO TELEFONE
+# =========================================
+
+  /v1/senai/tipo-telefone:
+    get:
+      tags:
+        - TIPO_TELEFONE
+      summary: Listar tipos telefone
+      responses:
+        '200':
+          description: Lista de tipos telefone
+
+    post:
+      tags:
+        - TIPO_TELEFONE
+      summary: Inserir tipo telefone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipoTelefone'
+      responses:
+        '201':
+          description: Tipo telefone criado
+
+components:
+
+  schemas:
+
+    Filme:
+      type: object
+      properties:
+        nome:
+          type: string
+        sinopse:
+          type: string
+        data_lancamento:
+          type: string
+        duracao:
+          type: string
+        valor:
+          type: number
+        avaliacao:
+          type: number
+        capa:
+          type: string
+
+    Classificacao:
+      type: object
+      properties:
+        nome:
+          type: string
+        descricao:
+          type: string
+        sigla:
+          type: string
+        idade_minima:
+          type: integer
+
+    Estado:
+      type: object
+      properties:
+        sigla:
+          type: string
+        nome:
+          type: string
+
+    Genero:
+      type: object
+      properties:
+        tipo:
+          type: string
+        descricao:
+          type: string
+
+    Idioma:
+      type: object
+      properties:
+        nome:
+          type: string
+        sigla:
+          type: string
+
+    Nacionalidade:
+      type: object
+      properties:
+        nome_pais:
+          type: string
+
+    TipoTelefone:
+      type: object
+      properties:
+        tipo:
+          type: string

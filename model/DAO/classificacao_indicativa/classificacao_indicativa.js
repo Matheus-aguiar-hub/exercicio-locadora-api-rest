@@ -28,7 +28,7 @@ const insertClassificacao = async function(classificacao){
                         '${classificacao.nome}',
                         '${classificacao.descricao}',
                         '${classificacao.sigla}',
-                        '${classificacao.idade_minima}',
+                        '${classificacao.idade_minima}'
                         );`
 
     //Executar o scriptSQL no banco de dados
@@ -49,9 +49,9 @@ const updateClassificacao = async function(classificacao){
             // Script para atualizar os dados do BD
             let sql = `update tbl_classificacao_indicativa set
                             nome                    = '${classificacao.nome}',
-                            descricao               = '${classificacao.data_lancamento}',
-                            sigla                   = '${classificacao.duracao}',
-                            idade_minima            = '${classificacao.sinopse}',
+                            descricao               = '${classificacao.descricao}',
+                            sigla                   = '${classificacao.sigla}',
+                            idade_minima            = '${classificacao.idade_minima}'
                             where id                =  ${classificacao.id}`
               
             // Executa o script SQL no BD

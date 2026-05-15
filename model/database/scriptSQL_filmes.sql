@@ -26,7 +26,10 @@ insert into tbl_filmes (
                         sinopse, 
                         avaliacao, 
                         valor, 
-                        capa
+                        capa,
+                        trailer_url,
+                        status,
+                        id_classificacao_indicativa
                         )
 				values(
 						'Super Mario Galaxy: O Filme',
@@ -37,16 +40,37 @@ insert into tbl_filmes (
                         depois de salvar o Reino dos Cogumelos.',
                         '3',
                         '50.70',
-                        'https://br.web.img3.acsta.net/c_310_420/img/5b/ea/5bea1aeac3323aeaaf82449a34fafbbf.jpg'
-                        );
+                        'https://br.web.img3.acsta.net/c_310_420/img/5b/ea/5bea1aeac3323aeaaf82449a34fafbbf.jpg',
+                        'daddsaddasdsadasdsadsadasdasdasdsd',
+                        'Em produção',
+                        1
+                        ),
+                        (
+						'As Cronicas de Etherion',
+						'2021-01-15',
+						'02:10:45',
+						'Um guerreiro precisa unir os reinos magicos antes da chegada de uma grande escuridao.',
+						'5',
+						'59.90',
+						'http://etherion.jpg',
+                        'daddsaddasdsadasdsadsadasdasdasdsd',
+                        'ativo',
+                        2
+						);
                         
-select * from tbl_filmes;
+alter table tbl_filmes add status varchar(15);
+                        
+select * from tbl_tipo_telefone;
+
+select tbl_filmes.nome as nome_filme, tbl_filmes.sinopse, tbl_filmes.data_lancamento, tbl_filmes.capa, tbl_filmes.duracao, tbl_filmes.valor, tbl_filmes.avaliacao, 
+		tbl_classificacao_indicativa.sigla, tbl_classificacao_indicativa.nome as nome_classificacao, tbl_classificacao_indicativa.descricao, tbl_classificacao_indicativa.idade_minima
+		from tbl_filmes
+        inner join tbl_classificacao_indicativa
+			on tbl_classificacao_indicativa.id = tbl_filmes.id_classificacao_indicativa;
 
 desc tbl_filmes;
 
 select * from tbl_filmes order by id asc;
-
-TRUNCATE TABLE tbl_filmes;
 
 delete from tbl_filmes where id > 0;
 
@@ -114,7 +138,7 @@ create table tbl_classificacao_indicativa(
     idade_minima	varchar(3) not null
 );
 
-desc tbl_classificacao_indicativa;
+desc tbl_filmes;
 
 insert into tbl_classificacao_indicativa(nome,
 										descricao,
@@ -158,3 +182,50 @@ insert into tbl_classificacao_indicativa(nome,
 											);
                                             
 select * from tbl_classificacao_indicativa;
+
+create table tbl_estado(id int not null primary key auto_increment,
+						sigla varchar(3) not null,
+						nome varchar(35) not null 
+)
+
+insert into tbl_estado (sigla, nome)value(
+										'SP',
+										'São Paulo'
+										),
+										(
+										'RJ',
+										'Rio de Janeiro'
+										),
+										(
+										'MG',
+										'Minas Gerais'
+										),
+										(
+										'PR',
+										'Paraná'
+										),
+										(
+										'SC',
+										'Santa Catarina'
+										),
+										(
+										'RS',
+										'Rio Grande do Sul'
+										),
+										(
+										'BA',
+										'Bahia'
+										),
+										(
+										'GO',
+										'Goiás'
+										),
+										(
+										'PE',
+										'Pernambuco'
+										),
+										(
+										'CE',
+										'Ceará'
+										);
+

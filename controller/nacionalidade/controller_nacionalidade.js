@@ -179,7 +179,7 @@ const validarDados = async function(nacionalidade){
 
     //Validação de dados para os atributos (status 400)
     if(nacionalidade.nome_pais == undefined || nacionalidade.nome_pais == '' || nacionalidade.nome_pais == null || nacionalidade.nome_pais.length > 100){
-        message.ERROR_BAD_REQUEST.field = '[TIPO] INVÁLIDO'
+        message.ERROR_BAD_REQUEST.field = '[NOME DO PAIS] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
     }else{
         return false
