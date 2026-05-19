@@ -10,19 +10,6 @@ O projeto expõe endpoints HTTP para criação, leitura, atualização e exclus�
 
 ---
 
-## Tecnologias
-
-| Tecnologia   | Finalidade |
-|--------------|------------|
-| Node.js      | Runtime de execução |
-| Express      | Roteamento e servidor HTTP |
-| Body-Parser  | Parsing do corpo das requisições JSON |
-| CORS         | Controle de acesso à API |
-| MySQL        | Banco de dados relacional |
-| JavaScript (ES6+) | Linguagem principal |
-
----
-
 ## Estrutura do Projeto
 
 ```
