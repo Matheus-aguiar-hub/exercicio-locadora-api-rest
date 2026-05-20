@@ -417,6 +417,8 @@ components:
           type: number
         capa:
           type: string
+        id_classificacao_indicativa:
+          type: number
 
     Classificacao:
       type: object

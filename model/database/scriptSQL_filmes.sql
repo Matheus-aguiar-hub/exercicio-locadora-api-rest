@@ -68,7 +68,7 @@ select tbl_filmes.nome as nome_filme, tbl_filmes.sinopse, tbl_filmes.data_lancam
         inner join tbl_classificacao_indicativa
 			on tbl_classificacao_indicativa.id = tbl_filmes.id_classificacao_indicativa;
 
-desc tbl_filmes;
+desc tbl_classificacao_indicativa;
 
 select * from tbl_filmes order by id asc;
 
@@ -138,7 +138,7 @@ create table tbl_classificacao_indicativa(
     idade_minima	varchar(3) not null
 );
 
-desc tbl_filmes;
+desc tbl_filme_genero;
 
 insert into tbl_classificacao_indicativa(nome,
 										descricao,
@@ -181,12 +181,12 @@ insert into tbl_classificacao_indicativa(nome,
 											18
 											);
                                             
-select * from tbl_classificacao_indicativa;
+select * from tbl_estado;
 
 create table tbl_estado(id int not null primary key auto_increment,
 						sigla varchar(3) not null,
 						nome varchar(35) not null 
-)
+);
 
 insert into tbl_estado (sigla, nome)value(
 										'SP',
@@ -229,3 +229,46 @@ insert into tbl_estado (sigla, nome)value(
 										'Ceará'
 										);
 
+use db_filmes_20261_a;
+
+show tables;
+
+desc tbl_filme_genero;
+
+create table tbl_filme_genero (	id 			int not null auto_increment primary key,
+								id_filme 	int not null,
+                                id_genero 	int not null,
+                                
+                                #Relação para o Filme
+                                constraint		FK_FILME_FILMEGENERO
+                                foreign key 	(id_filme)
+                                references 		tbl_filmes(id),
+                                
+                                #Relação para o Genero
+                                constraint 		FK_GENERO_FILMEGENERO
+                                foreign key 	(id_genero)
+                                references  	tbl_genero(id)
+                                );
+                                
+#Adicionar a coluna do FK e criar relação com a tabela classificação 
+alter table tbl_filmes
+			add column id_classificacao_indicativa int not null,
+			add constraint FK_CLASSIFICACAO_INDICATIVA_FILME
+				foreign key (id_classificacao_indicativa)
+                references tbl_classificacao_indicativa(id);
+                
+select * from tbl_classificacao_indicativa;
+
+show tables;
+
+delete from tbl_filmes;
+
+create table tbl_filme_idioma (	id int not null auto_increment primary key,
+								tipo varchar(100) not null,
+								id_idioma int not null,
+                                
+                                #Relação com idioma
+                                constraint 		FK_IDIOMA_FILMEIDIOMA
+								foreign key 	(id_idioma)
+                                references  	tbl_idioma(id)
+                                )

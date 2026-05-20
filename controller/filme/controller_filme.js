@@ -12,6 +12,9 @@ const config_message = require('../modulo/configMessages.js')
 //Import do arquivo DAO para fazer o CRUD do filme no banco de dados
 const filmeDAO = require('../../model/DAO/filme/filmes.js')
 
+//Impor de arquivos do controller
+const controller_classificacao = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js')
+
 //Função para inserir um novo filme
 const inserirNovoFilme = async function(filmes, contentType){
 
@@ -120,6 +123,20 @@ const listarFilme = async function(){
         if(result){
             //Validação para verificar se existe conteúdo no array
             if(result.length > 0 ){
+
+                //Percorre O ARRAY de filmes para identificar os dados de classificação
+                for(filmes of result){
+                    //Busca na controller da classificação o ID referente aos dados
+                    let resultClassificacao = await controller_classificacao.selectByIdClassificacao(filmes.id_classificacao_indicativa)
+                    //Se a classificação foi encontrada
+                    if(resultClassificacao){
+                        //Cria o atributo classificação no filme e adiciona os dados referente a classificação
+                        filmes.classificacao = resultClassificacao
+                        //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
+                        delete filmes.id_classificacao_indicativa 
+                    }
+                }
+
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
@@ -151,6 +168,19 @@ const buscarFilme = async function(id){
 
             if(result){
                 if(result.length > 0){
+
+                //Percorre O ARRAY de filmes para identificar os dados de classificação
+                for(filmes of result){
+                    //Busca na controller da classificação o ID referente aos dados
+                    let resultClassificacao = await controller_classificacao.selectByIdClassificacao(filmes.id_classificacao_indicativa)
+                    //Se a classificação foi encontrada
+                    if(resultClassificacao){
+                        //Cria o atributo classificação no filme e adiciona os dados referente a classificação
+                        filmes.classificacao = resultClassificacao
+                        //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
+                        delete filmes.id_classificacao_indicativa 
+                    }
+                }
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
                     message.DEFAULT_MESSAGE.response.filme  = result
@@ -226,6 +256,11 @@ const validarDados = async function(filmes){
 
     }else if(filmes.capa.length > 255){
         message.ERROR_BAD_REQUEST.field = '[CAPA] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+
+        //  Validação para a FK da classificação
+    }else if(filmes.id_classificacao_indicativa == undefined || filmes.id_classificacao_indicativa == ''  || filmes.id_classificacao_indicativa == null || isNaN(filmes.id_classificacao_indicativa) || filmes.id_classificacao_indicativa.length <=0){
+        message.ERROR_BAD_REQUEST.field = '[ID_CLASSIFICAÇÃO_INDICATIVA] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else{
         return false

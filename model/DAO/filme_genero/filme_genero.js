@@ -1,9 +1,8 @@
 /********************************************************************************
  * Objetivo: Arquivo responsável pelo CRUD no Banco de daods MySQL na tabela
- *           genero
  * Data 15/04/2026
  * Autor: Matheus Aguiar
- * Versão: 1.1
+ * Versão: 1.0
  ********************************************************************************/
 
 //import da biblioteca para gerenciar o banco de dados Mysql no node.JS
@@ -15,40 +14,40 @@ const knexConfig = require('../../database_config_knex/knex_file.js')
 //Criar a conexão com o BD Mysql
 const knexConex = knex(knexConfig.development)
 
-const insertGenero = async function(genero){
+const insertFilme_genero = async function(filme_genero){
     try {
-        let sql = `insert into tbl_genero (
-                            tipo, 
-                            descricao
-                            )
-                    values(
-                            '${genero.tipo}',
-                            '${genero.descricao}'
-                            );`
+    let sql = `insert into tbl_filme_genero (
+                        id_filme,
+                        id_genero
+                        )
+                values(
+                        '${filme_genero.id_filme}',
+                        '${filme_genero.id_genero}'
+                        );`
+
+    //Executar o scriptSQL no banco de dados
+    let result = await knexConex.raw(sql)
+
+    if(result) return result[0].insertId //Retorna o ID gerado no banco de dados
+    else return false
     
-        //Executar o scriptSQL no banco de dados
-        let result = await knexConex.raw(sql)
-    
-        if(result) return result[0].insertId //Retorna o ID gerado no banco de dados
-        else return false
-        
-        }catch(error){
-            // console.log(error)
-            return false
-        }
+    }catch(error){
+        // console.log(error)
+        return false
+    }
 }
 
-const updateGenero = async function(genero){
+const updateFilme_genero = async function(filme_genero){
         try {
             // Script para atualizar os dados do BD
-            let sql = `update tbl_genero set
-                            tipo            = '${genero.tipo}',
-                            descricao       = '${genero.descricao}'
-                            where id        =  ${genero.id}`
+            let sql = `update tbl_filme_genero set
+                            id_filme                = '${filme_genero.id_filme}',
+                            id_genero               = '${filme_genero.id_genero}'
+                            where id                =  ${filme_genero.id}`
               
             // Executa o script SQL no BD
             let result = await knexConex.raw(sql)
-
+    
             if(result)
                 return true
             else
@@ -58,10 +57,11 @@ const updateGenero = async function(genero){
         }
 }
 
-const selectAllGenero = async function(){
-    try {
-        let sql = 'select * from tbl_genero order by id desc'
 
+const selectAllFilme_genero= async function(){
+    try {
+        let sql = 'select * from tbl_filme_genero order by id desc'
+        
         let result = await knexConex.raw(sql)
 
         //Validação para verificar se o retorno do banco é um array
@@ -75,12 +75,10 @@ const selectAllGenero = async function(){
     }
 }
 
-const selectByIdGenero = async function(id){
+const selectByIdFilme_genero = async function(id){
     try {
-        let sql = `select * from tbl_genero where id=${id}`
-
+        let sql = `select * from tbl_filme_genero where id=${id}`
         let result = await knexConex.raw(sql)
-
         if(Array.isArray(result)){
             return result[0]
         }else return false
@@ -90,9 +88,9 @@ const selectByIdGenero = async function(id){
     }
 }
 
-const deleteGenero = async function(id){
+const deleteFilme_genero = async function(id){
     try{
-        let sql = `delete from tbl_genero
+        let sql = `delete from tbl_filme_genero
                      where id=${id}`
 
     let result = await knexConex.raw(sql)
@@ -108,9 +106,9 @@ const deleteGenero = async function(id){
 }
 
 module.exports = {
-    insertGenero,
-    updateGenero,
-    selectAllGenero,
-    selectByIdGenero,
-    deleteGenero
+    insertFilme_genero,
+    updateFilme_genero,
+    selectAllFilme_genero,
+    selectByIdFilme_genero,
+    deleteFilme_genero
 }

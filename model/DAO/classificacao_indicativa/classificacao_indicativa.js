@@ -15,7 +15,6 @@ const knexConfig = require('../../database_config_knex/knex_file.js')
 //Criar a conexão com o BD Mysql
 const knexConex = knex(knexConfig.development)
 
-//Função para inserir dados na tabela de filmes
 const insertClassificacao = async function(classificacao){
     try {
     let sql = `insert into tbl_classificacao_indicativa (
@@ -66,13 +65,10 @@ const updateClassificacao = async function(classificacao){
         }
 }
 
-//Função para retornar todos os dados da tabela de filme
 const selectAllClassificacao = async function(){
     try {
-        //Script para retornar todos os filmes
         let sql = 'select * from tbl_classificacao_indicativa order by id desc'
 
-        //Executa no banco de dados o script SQL para retornar os filmes
         let result = await knexConex.raw(sql)
 
         //Validação para verificar se o retorno do banco é um array
@@ -86,13 +82,10 @@ const selectAllClassificacao = async function(){
     }
 }
 
-//Função para retornar os dados do filme filtrando pelo id
 const selectByIdClassificacao = async function(id){
     try {
         let sql = `select * from tbl_classificacao_indicativa where id=${id}`
-
         let result = await knexConex.raw(sql)
-
         if(Array.isArray(result)){
             return result[0]
         }else return false
@@ -102,7 +95,6 @@ const selectByIdClassificacao = async function(id){
     }
 }
 
-//Função para excluir um filme pelo ID
 const deleteClassificacao = async function(id){
     try{
         let sql = `delete from tbl_classificacao_indicativa

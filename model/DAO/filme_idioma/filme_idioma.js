@@ -1,9 +1,9 @@
 /********************************************************************************
  * Objetivo: Arquivo responsável pelo CRUD no Banco de daods MySQL na tabela
- *           genero
- * Data 15/04/2026
+ *           intermediaria filme e idioma
+ * Data 20/05/2026
  * Autor: Matheus Aguiar
- * Versão: 1.1
+ * Versão: 0.9.5.26
  ********************************************************************************/
 
 //import da biblioteca para gerenciar o banco de dados Mysql no node.JS
@@ -15,15 +15,15 @@ const knexConfig = require('../../database_config_knex/knex_file.js')
 //Criar a conexão com o BD Mysql
 const knexConex = knex(knexConfig.development)
 
-const insertGenero = async function(genero){
+const insertFilme_idioma = async function(filme_idioma){
     try {
-        let sql = `insert into tbl_genero (
+        let sql = `insert into tbl_filme_idioma (
                             tipo, 
-                            descricao
+                            id_idioma
                             )
                     values(
-                            '${genero.tipo}',
-                            '${genero.descricao}'
+                            '${filme_idioma.tipo}',
+                            '${filme_idioma.id_idioma}'
                             );`
     
         //Executar o scriptSQL no banco de dados
@@ -38,13 +38,13 @@ const insertGenero = async function(genero){
         }
 }
 
-const updateGenero = async function(genero){
+const updateFilme_idioma = async function(filme_idioma){
         try {
             // Script para atualizar os dados do BD
-            let sql = `update tbl_genero set
-                            tipo            = '${genero.tipo}',
-                            descricao       = '${genero.descricao}'
-                            where id        =  ${genero.id}`
+            let sql = `update tbl_filme_idioma set
+                            tipo            = '${filme_idioma.tipo}',
+                            id_idioma       = '${filme_idioma.id_idioma}'
+                            where id        =  ${filme_idioma.id}`
               
             // Executa o script SQL no BD
             let result = await knexConex.raw(sql)
@@ -58,9 +58,9 @@ const updateGenero = async function(genero){
         }
 }
 
-const selectAllGenero = async function(){
+const selectAllFilme_idioma = async function(){
     try {
-        let sql = 'select * from tbl_genero order by id desc'
+        let sql = 'select * from tbl_filme_idioma order by id desc'
 
         let result = await knexConex.raw(sql)
 
@@ -75,9 +75,9 @@ const selectAllGenero = async function(){
     }
 }
 
-const selectByIdGenero = async function(id){
+const selectByFilme_idioma = async function(id){
     try {
-        let sql = `select * from tbl_genero where id=${id}`
+        let sql = `select * from tbl_filme_idioma where id=${id}`
 
         let result = await knexConex.raw(sql)
 
@@ -90,9 +90,9 @@ const selectByIdGenero = async function(id){
     }
 }
 
-const deleteGenero = async function(id){
+const deleteFilme_idioma = async function(id){
     try{
-        let sql = `delete from tbl_genero
+        let sql = `delete from tbl_filme_idioma
                      where id=${id}`
 
     let result = await knexConex.raw(sql)
@@ -108,9 +108,9 @@ const deleteGenero = async function(id){
 }
 
 module.exports = {
-    insertGenero,
-    updateGenero,
-    selectAllGenero,
-    selectByIdGenero,
-    deleteGenero
+    insertFilme_idioma,
+    updateFilme_idioma,
+    selectAllFilme_idioma,
+    selectAllFilme_idioma,
+    deleteFilme_idioma
 }

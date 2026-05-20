@@ -25,7 +25,8 @@ const insertFilme = async function(filmes){
                         sinopse, 
                         avaliacao, 
                         valor, 
-                        capa
+                        capa,
+                        id_classificacao_indicativa
                         )
 				values(
 						'${filmes.nome}',
@@ -34,7 +35,8 @@ const insertFilme = async function(filmes){
                         '${filmes.sinopse}',
                         if('${filmes.avaliacao}' = '', null, '${filmes.avaliacao}'),
                         '${filmes.valor}',
-                        '${filmes.capa}'
+                        '${filmes.capa}',
+                        ${filmes.id_classificacao_indicativa}
                         );`
 
     //Executar o scriptSQL no banco de dados
@@ -44,7 +46,7 @@ const insertFilme = async function(filmes){
     else return false
     
     }catch(error){
-        // console.log(error)
+        console.log(error)
         return false
     }
 }
@@ -54,13 +56,14 @@ const updateFilme = async function(filmes){
         try {
             // Script para atualizar os dados do BD
             let sql = `update tbl_filmes set
-                            nome            = '${filmes.nome}',
-                            data_lancamento = '${filmes.data_lancamento}',
-                            duracao         = '${filmes.duracao}',
-                            sinopse         = '${filmes.sinopse}',
-                            avaliacao       = if('${filmes.avaliacao}' = '', null, '${filmes.avaliacao}'),
-                            valor           = '${filmes.valor}',
-                            capa            = '${filmes.capa}'
+                            nome                        = '${filmes.nome}',
+                            data_lancamento             = '${filmes.data_lancamento}',
+                            duracao                     = '${filmes.duracao}',
+                            sinopse                     = '${filmes.sinopse}',
+                            avaliacao                   = if('${filmes.avaliacao}' = '', null, '${filmes.avaliacao}'),
+                            valor                       = '${filmes.valor}',
+                            capa                        = '${filmes.capa}',
+                            id_classificacao_indicativa = ${filmes.id_classificacao_indicativa}
                         where id = ${filmes.id}`
               
             // Executa o script SQL no BD
