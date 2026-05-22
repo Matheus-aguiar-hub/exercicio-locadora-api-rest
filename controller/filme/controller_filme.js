@@ -49,7 +49,10 @@ const inserirNovoFilme = async function(filmes, contentType){
                                 }
             //Chama a controller do filme genero para inserir os ID's
             let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
-            console.log(resultInsertGenero)
+            
+            if(!resultInsertGenero.status){
+                return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
+            }
 
             }
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
@@ -147,6 +150,12 @@ const listarFilme = async function(){
                         //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
                         delete filmes.id_classificacao_indicativa 
                     }
+
+                    //Cria o objeto de gênero relacionado ao Filme
+                    let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
+                    if(resultGenero.status){
+                        filme.genero = resultGenero.response.filme_genero
+                    }
                 }
 
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
@@ -192,6 +201,12 @@ const buscarFilme = async function(id){
                         //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
                         delete filmes.id_classificacao_indicativa 
                     }
+                    //Cria o objeto de gênero relacionado ao Filme
+                    let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
+                    if(resultGenero.status){
+                        filme.genero = resultGenero.response.filme_genero
+                    }
+
                 }
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
