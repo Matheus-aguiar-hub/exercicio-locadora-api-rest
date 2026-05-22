@@ -13,8 +13,12 @@ create table tbl_filmes(
     sinopse			text not null,
     avaliacao		decimal(3,2) default null,
     valor 			decimal(5,2) not null default 0,
-	capa			varchar(255)
+	capa			varchar(255),
+    trailer_url		varchar(255),
+    status			varchar(15)
 );
+
+desc tbl_filmes;
 
 show tables;
 
@@ -58,6 +62,7 @@ insert into tbl_filmes (
                         2
 						);
                         
+
 alter table tbl_filmes add status varchar(15);
                         
 select * from tbl_tipo_telefone;
@@ -271,4 +276,7 @@ create table tbl_filme_idioma (	id int not null auto_increment primary key,
                                 constraint 		FK_IDIOMA_FILMEIDIOMA
 								foreign key 	(id_idioma)
                                 references  	tbl_idioma(id)
-                                )
+                                );
+                                
+desc tbl_filme_idioma;
+

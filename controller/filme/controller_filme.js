@@ -13,7 +13,8 @@ const config_message = require('../modulo/configMessages.js')
 const filmeDAO = require('../../model/DAO/filme/filmes.js')
 
 //Impor de arquivos do controller
-const controller_classificacao = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js')
+const controller_classificacao  = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js')
+const controller_filme_genero   = require('./controller_filme_genero.js')
 
 //Função para inserir um novo filme
 const inserirNovoFilme = async function(filmes, contentType){
@@ -24,7 +25,6 @@ const inserirNovoFilme = async function(filmes, contentType){
     try{
     //Validação para o tipo de dados da requisição (somente JSON)
     if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
-
     
     //Validação de dados para os atributos do filme (Status 400)
     let validar = await validarDados(filmes)
@@ -40,6 +40,18 @@ const inserirNovoFilme = async function(filmes, contentType){
         if(result){ // 201
             //Criando o atributo id no Json do filme e colocando o novo ID gerado após o insert
             filmes.id = result
+
+            //Manipulação de dados para inserir os Generos do Filme
+            for (genero of filmes.genero){
+             //Cria o objeto JSON com os ID's do filme e do gênero
+            let filmeGenero        = {"id_filme": filmes.id, 
+                                    "id_genero": genero.id
+                                }
+            //Chama a controller do filme genero para inserir os ID's
+            let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
+            console.log(resultInsertGenero)
+
+            }
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
