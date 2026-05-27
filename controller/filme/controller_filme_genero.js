@@ -140,7 +140,6 @@ const buscarFilmeGenero = async function(id){
         }
 }
 
-
 const buscarFilmeIdGenero = async function(idGenero){
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
    let message = JSON.parse(JSON.stringify(config_message))
@@ -187,7 +186,7 @@ const buscarGeneroIdFilme = async function(idFilme){
                if(result.length > 0){
                    message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                    message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                   message.DEFAULT_MESSAGE.response.filme_genero = result
+                   message.DEFAULT_MESSAGE.response.filme_genero = result[0]
 
                    return message.DEFAULT_MESSAGE //200
                }else{
@@ -227,6 +226,23 @@ const excluirFilmeGenero = async function(id){
     }
 }
 
+//Função para excluir os gêneros relacionados com o Filme
+const excluirGenerosIdFilme = async function(idFilme){
+    let message = JSON.parse(JSON.stringify(config_message))
+
+    try{            
+            let result = await filmeGeneroDAO.deleteGenerosByIdFilme(idFilme)
+
+            if(result){
+                return  message.SUCESS_DELETED_ITEM //200 (Registro excluido)
+            }else{
+                return message.ERROR_INTERNAL_SERVER_MODEL//500 (model)
+            }
+    }catch (error){
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (Controller)
+    }
+}
+
 const validarDados = async function(filmeGenero){
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -250,5 +266,6 @@ module.exports = {
     excluirFilmeGenero,
     atualizarFilmeGenero,
     buscarFilmeIdGenero,
-    buscarGeneroIdFilme
+    buscarGeneroIdFilme,
+    excluirGenerosIdFilme
 }
