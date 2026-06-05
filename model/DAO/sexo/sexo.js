@@ -1,6 +1,6 @@
 /********************************************************************************
  * Objetivo: Arquivo responsável pelo CRUD no Banco de daods MySQL na tabela
- * Data 15/04/2026
+ * Data 04/06/2026
  * Autor: Matheus Aguiar
  * Versão: 1.1
  ********************************************************************************/
@@ -14,14 +14,16 @@ const knexConfig = require('../../database_config_knex/knex_file.js')
 //Criar a conexão com o BD Mysql
 const knexConex = knex(knexConfig.development)
 
-
-const insertTipoTelefone = async function(tipo_telefone){
+//Função para inserir dados na tabela de filmes
+const insertSexo = async function(sexo){
     try {
-        let sql = `insert into tbl_tipo_telefone (
-                            tipo
+        let sql = `insert into tbl_sexo (
+                            nome,
+                            sigla
                             )
                     values(
-                            '${tipo_telefone.tipo}'
+                            '${sexo.nome}',
+                            '${sexo.sigla}'
                             );`
     
         //Executar o scriptSQL no banco de dados
@@ -36,12 +38,13 @@ const insertTipoTelefone = async function(tipo_telefone){
         }
 }
 
-const updateTipoTelefone  = async function(tipo_telefone){
+const updateSexo = async function(sexo){
         try {
             // Script para atualizar os dados do BD
-            let sql = `update tbl_tipo_telefone set
-                            tipo            = '${tipo_telefone.tipo}'
-                            where id        =  ${tipo_telefone.id}`
+            let sql = `update tbl_sexo set
+                            nome       = '${sexo.nome}',
+                            sigla      = '${sexo.sigla}'
+                            where id        =  ${sexo.id}`
               
             // Executa o script SQL no BD
             let result = await knexConex.raw(sql)
@@ -55,10 +58,12 @@ const updateTipoTelefone  = async function(tipo_telefone){
         }
 }
 
-const selectAllTipoTelefone  = async function(){
+const selectAllSexo = async function(){
     try {
-        let sql = 'select * from tbl_tipo_telefone order by id desc'
+        //Script para retornar todos os filmes
+        let sql = 'select * from tbl_sexo order by id desc'
 
+        //Executa no banco de dados o script SQL para retornar os filmes
         let result = await knexConex.raw(sql)
 
         //Validação para verificar se o retorno do banco é um array
@@ -72,9 +77,9 @@ const selectAllTipoTelefone  = async function(){
     }
 }
 
-const selectByIdTipoTelefone  = async function(id){
+const selectByIdSexo = async function(id){
     try {
-        let sql = `select * from tbl_tipo_telefone where id=${id}`
+        let sql = `select * from tbl_sexo where id=${id}`
 
         let result = await knexConex.raw(sql)
 
@@ -87,9 +92,9 @@ const selectByIdTipoTelefone  = async function(id){
     }
 }
 
-const deleteByIdTipoTelefone  = async function(id){
+const deleteByIdSexo = async function(id){
     try{
-        let sql = `delete from tbl_tipo_telefone
+        let sql = `delete from tbl_sexo
                      where id=${id}`
 
     let result = await knexConex.raw(sql)
@@ -105,9 +110,9 @@ const deleteByIdTipoTelefone  = async function(id){
 }
 
 module.exports = {
-    insertTipoTelefone,
-    updateTipoTelefone,
-    selectAllTipoTelefone,
-    selectByIdTipoTelefone,
-    deleteByIdTipoTelefone
+    insertSexo,
+    updateSexo,
+    selectAllSexo,
+    selectByIdSexo,
+    deleteByIdSexo
 }

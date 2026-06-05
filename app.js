@@ -4,13 +4,14 @@ const bodyParser    = require('body-parser')
 
 //Import das CONTROLLERS do projeto
 
-const    controllerFilme           = require('./controller/filme/controller_filme.js')
 const    controllerGenero          = require('./controller/genero/controller_genero.js')
 const    controllerClassificacao   = require('./controller/classificacao_indicativa/controller_classificacao.js')
 const    controllerIdioma          = require('./controller/idioma/controller_idioma.js')
 const    controllerNacionalidade   = require('./controller/nacionalidade/controller_nacionalidade.js')
 const    controllerTipoTelefone    = require('./controller/tipo_telefone/controller_tipo_telefone.js')
-const    controllerEstado          = require('./controller/estado/controller_estado.js')
+const    controllerFilme           = require('./controller/filme/controller_filme.js')
+const    controllerSexo            = require('./controller/sexo/controller_sexo.js')
+const    controllerProdutora       = require('./controller/produtora/controller_produtora.js')
 //Criando um objeto para manipular dados do body da API em formato JSON
 const bodyParserJSON = bodyParser.json()
 
@@ -165,7 +166,7 @@ app.post('/v1/senai/locadora/classificacao', bodyParserJSON, async function(requ
 
     let contentType = request.headers['content-type']
 
-    let result = await controllerGenero.inserirNovoClassificacao(dados, contentType)
+    let result = await controllerClassificacao.inserirNovaClassificacao(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)
@@ -426,47 +427,48 @@ app.delete('/v1/senai/locadora/tipo-telefone/:id', async function(request, respo
 })
 
 /* =========================================
-             ENDPOINTS DE ESTADO
+             ENDPOINTS DE SEXO
  ========================================= */
 
-// Endpoint para inserir estado
-app.post('/v1/senai/locadora/estado', bodyParserJSON, async function(request, response){
+ 
+// Endpoint para inserir tipo telefone
+app.post('/v1/senai/locadora/sexo', bodyParserJSON, async function(request, response){
 
     let dados = request.body
 
     let contentType = request.headers['content-type']
 
-    let result = await controllerEstado.inserirNovoEstado(dados, contentType)
+    let result = await controllerSexo.inserirNovoSexo(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)
 })
 
 
-// Endpoint para listar estados
-app.get('/v1/senai/locadora/estado', async function(request, response){
+// Endpoint para listar tipos de telefone
+app.get('/v1/senai/locadora/sexo', async function(request, response){
 
-    let result = await controllerEstado.listarEstado()
+    let result = await controllerSexo.listarSexo()
 
     response.status(result.status_code)
     response.json(result)
 })
 
 
-// Endpoint para buscar estado pelo ID
-app.get('/v1/senai/locadora/estado/:id', async function(request, response){
+// Endpoint para buscar tipo telefone pelo ID
+app.get('/v1/senai/locadora/sexo/:id', async function(request, response){
 
     let id = request.params.id
 
-    let result = await controllerEstado.buscarByIdEstado(id)
+    let result = await controllerSexo.buscarSexo(id)
 
     response.status(result.status_code)
     response.json(result)
 })
 
 
-// Endpoint para atualizar estado
-app.put('/v1/senai/locadora/estado/:id', bodyParserJSON, async function(request, response){
+// Endpoint para atualizar tipo telefone
+app.put('/v1/senai/locadora/sexo/:id', bodyParserJSON, async function(request, response){
 
     let id = request.params.id
 
@@ -474,19 +476,87 @@ app.put('/v1/senai/locadora/estado/:id', bodyParserJSON, async function(request,
 
     let contentType = request.headers['content-type']
 
-    let result = await controllerEstado.atualizarEstado(dados, id, contentType)
+    let result = await controllerSexo.atualizarSexo(dados, id, contentType)
 
     response.status(result.status_code)
     response.json(result)
 })
 
 
-// Endpoint para deletar estado
-app.delete('/v1/senai/locadora/estado/:id', async function(request, response){
+// Endpoint para deletar tipo telefone
+app.delete('/v1/senai/locadora/sexo/:id', async function(request, response){
 
     let id = request.params.id
 
-    let result = await controllerEstado.excluirByIdEstado(id)
+    let result = await controllerSexo.excluirSexo(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+/* =========================================
+            ENDPOINTS DE PRODUTORA
+ ========================================= */
+
+ 
+// Endpoint para inserir tipo telefone
+app.post('/v1/senai/locadora/produtora', bodyParserJSON, async function(request, response){
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerProdutora.inserirNovaProdutora(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para listar tipos de telefone
+app.get('/v1/senai/locadora/produtora', async function(request, response){
+
+    let result = await controllerProdutora.listarProdutora()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para buscar tipo telefone pelo ID
+app.get('/v1/senai/locadora/produtora/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerProdutora.buscarProdutora(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para atualizar tipo telefone
+app.put('/v1/senai/locadora/produtora/:id', bodyParserJSON, async function(request, response){
+
+    let id = request.params.id
+
+    let dados = request.body
+
+    let contentType = request.headers['content-type']
+
+    let result = await controllerProdutora.atualizarProdutora(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+// Endpoint para deletar tipo telefone
+app.delete('/v1/senai/locadora/produtora/:id', async function(request, response){
+
+    let id = request.params.id
+
+    let result = await controllerProdutora.excluirProdutora(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -498,3 +568,4 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, function(){
     console.log('API Funcionando na porta ' + PORT);
 })
+

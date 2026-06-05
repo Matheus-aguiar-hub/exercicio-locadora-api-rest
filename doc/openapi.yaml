@@ -91,7 +91,7 @@ paths:
 # CLASSIFICACAO
 # =========================================
 
-  /v1/senai/classificacao:
+  /v1/senai/locadora/classificacao:
     get:
       tags:
         - CLASSIFICACAO
@@ -114,7 +114,7 @@ paths:
         '201':
           description: Classificação criada
 
-  /v1/senai/classificacao/{id}:
+  /v1/senai/locadora/classificacao/{id}:
     get:
       tags:
         - CLASSIFICACAO
@@ -162,82 +162,6 @@ paths:
       responses:
         '200':
           description: Classificação excluída
-
-# =========================================
-# ESTADO
-# =========================================
-
-  /v1/senai/estado:
-    get:
-      tags:
-        - ESTADO
-      summary: Listar estados
-      responses:
-        '200':
-          description: Lista de estados
-
-    post:
-      tags:
-        - ESTADO
-      summary: Inserir estado
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Estado'
-      responses:
-        '201':
-          description: Estado criado
-
-  /v1/senai/estado/{id}:
-    get:
-      tags:
-        - ESTADO
-      summary: Buscar estado por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Estado encontrado
-
-    put:
-      tags:
-        - ESTADO
-      summary: Atualizar estado
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Estado'
-      responses:
-        '200':
-          description: Estado atualizado
-
-    delete:
-      tags:
-        - ESTADO
-      summary: Excluir estado
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Estado excluído
 
 # =========================================
 # GENERO
@@ -319,7 +243,7 @@ paths:
 # IDIOMA
 # =========================================
 
-  /v1/senai/idioma:
+  /v1/senai/locadora/idioma:
     get:
       tags:
         - IDIOMA
@@ -342,11 +266,60 @@ paths:
         '201':
           description: Idioma criado
 
+  /v1/senai/locadora/idioma/{id}:
+    get:
+      tags:
+        - IDIOMA
+      summary: Buscar idioma por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Idioma encontrado
+
+    put:
+      tags:
+        - IDIOMA
+      summary: Atualizar idioma
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+      responses:
+        '200':
+          description: Idioma atualizado
+
+    delete:
+      tags:
+        - IDIOMA
+      summary: Excluir idioma
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Idioma excluído
+
 # =========================================
 # NACIONALIDADE
 # =========================================
 
-  /v1/senai/nacionalidade:
+  /v1/senai/locadora/nacionalidade:
     get:
       tags:
         - NACIONALIDADE
@@ -369,11 +342,136 @@ paths:
         '201':
           description: Nacionalidade criada
 
+  /v1/senai/locadora/nacionalidade/{id}:
+    get:
+      tags:
+        - NACIONALIDADE
+      summary: Buscar nacionalidade por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Nacionalidade encontrada
+
+    put:
+      tags:
+        - NACIONALIDADE
+      summary: Atualizar nacionalidade
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nacionalidade'
+      responses:
+        '200':
+          description: Nacionalidade atualizada
+
+    delete:
+      tags:
+        - NACIONALIDADE
+      summary: Excluir nacionalidade
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Nacionalidade excluída
+
+# =========================================
+# SEXO
+# =========================================
+
+  /v1/senai/locadora/sexo:
+    get:
+      tags:
+        - SEXO
+      summary: Listar sexos
+      responses:
+        '200':
+          description: Lista de sexos
+
+    post:
+      tags:
+        - SEXO
+      summary: Inserir sexo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sexo'
+      responses:
+        '201':
+          description: Sexo criado
+
+  /v1/senai/locadora/sexo/{id}:
+    get:
+      tags:
+        - SEXO
+      summary: Buscar sexo por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sexo encontrado
+
+    put:
+      tags:
+        - SEXO
+      summary: Atualizar sexo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sexo'
+      responses:
+        '200':
+          description: Sexo atualizado
+
+    delete:
+      tags:
+        - SEXO
+      summary: Excluir sexo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sexo excluído
+
 # =========================================
 # TIPO TELEFONE
 # =========================================
 
-  /v1/senai/tipo-telefone:
+  /v1/senai/locadora/tipo-telefone:
     get:
       tags:
         - TIPO_TELEFONE
@@ -396,6 +494,133 @@ paths:
         '201':
           description: Tipo telefone criado
 
+  /v1/senai/tipo-telefone/{id}:
+    get:
+      tags:
+        - TIPO_TELEFONE
+      summary: Buscar tipo telefone por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tipo telefone encontrado
+
+    put:
+      tags:
+        - TIPO_TELEFONE
+      summary: Atualizar tipo telefone
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipoTelefone'
+      responses:
+        '200':
+          description: Tipo telefone atualizado
+
+    delete:
+      tags:
+        - TIPO_TELEFONE
+      summary: Excluir tipo telefone
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tipo telefone excluído
+
+# =========================================
+# PRODUTORA
+# =========================================
+
+  /v1/senai/locadora/produtora:
+    get:
+      tags:
+        - PRODUTORA
+      summary: Listar produtoras
+      responses:
+        '200':
+          description: Lista de produtoras
+
+    post:
+      tags:
+        - PRODUTORA
+      summary: Inserir produtora
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produtora'
+      responses:
+        '201':
+          description: Produtora criada
+
+  /v1/senai/locadora/produtora/{id}:
+    get:
+      tags:
+        - PRODUTORA
+      summary: Buscar produtora por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produtora encontrada
+
+    put:
+      tags:
+        - PRODUTORA
+      summary: Atualizar produtora
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produtora'
+      responses:
+        '200':
+          description: Produtora atualizada
+
+    delete:
+      tags:
+        - PRODUTORA
+      summary: Excluir produtora
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produtora excluída
+
+# =========================================
+
 components:
 
   schemas:
@@ -405,17 +630,21 @@ components:
       properties:
         nome:
           type: string
-        sinopse:
-          type: string
         data_lancamento:
-          type: string
+          type: date  
         duracao:
-          type: string
-        valor:
-          type: number
+          type: time
+        sinopse:
+          type: text
         avaliacao:
           type: number
+        valor:
+          type: number
         capa:
+          type: string
+        trailer_url:
+          type: string
+        status_filme:
           type: string
         id_classificacao_indicativa:
           type: number
@@ -426,18 +655,10 @@ components:
         nome:
           type: string
         descricao:
-          type: string
+          type: text
         sigla:
           type: string
         idade_minima:
-          type: integer
-
-    Estado:
-      type: object
-      properties:
-        sigla:
-          type: string
-        nome:
           type: string
 
     Genero:
@@ -446,9 +667,17 @@ components:
         tipo:
           type: string
         descricao:
-          type: string
+          type: text
 
     Idioma:
+      type: object
+      properties:
+        nome:
+          type: string
+        sigla:
+          type: string
+
+    Sexo:
       type: object
       properties:
         nome:
@@ -466,4 +695,22 @@ components:
       type: object
       properties:
         tipo:
+          type: string
+
+    Produtora:
+      type: object
+      properties:
+        nome_fantasia:
+          type: string
+        cnpj:
+          type: string
+        razao_social:
+          type: string
+        website:
+          type: string
+        data_inicio:
+          type: date
+        status_produtora:
+          type: string
+        email:
           type: string

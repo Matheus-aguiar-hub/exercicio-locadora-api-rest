@@ -40,7 +40,7 @@ const updateNacionalidade = async function(nacionalidade){
         try {
             // Script para atualizar os dados do BD
             let sql = `update tbl_nacionalidade set
-                            nome_pais           = '${nacionalidade.nome_pais}'
+                            nome_pais       = '${nacionalidade.nome_pais}'
                             where id        =  ${nacionalidade.id}`
               
             // Executa o script SQL no BD

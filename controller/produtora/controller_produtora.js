@@ -1,7 +1,7 @@
 /****************************************************************
  * Objetivo: Arquivo responsável pela validação, tratamento e
  *          Manipulação de dados para o CRUD de filmes
- * Data: 17/04/2026
+ * Data: 04/06/2026
  * Autor: Matheus Aguiar
  * Versão: 1.0
 ****************************************************************/
@@ -10,10 +10,10 @@
 const config_message = require('../modulo/configMessages.js') 
 
 //Import do arquivo DAO para fazer o CRUD do filme no banco de dados
-const classificacaoDAO = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js')
+const produtoraDAO = require('../../model/DAO/produtora/produtora.js')
 
 //Função para inserir um novo filme
-const inserirNovaClassificacao = async function(classificacao, contentType){
+const inserirNovaProdutora = async function(produtora, contentType){
 
     //Criando um clone do objeto JSON para manipular a sua estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
@@ -22,21 +22,21 @@ const inserirNovaClassificacao = async function(classificacao, contentType){
     //Validação para o tipo de dados da requisição (somente JSON)
     if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-    let validar = await validarDados(classificacao)
+    let validar = await validarDados(produtora)
 
     if(validar){
         return validar // 400
     }
     else{
 
-        let result = await classificacaoDAO.insertClassificacao(classificacao)
+        let result = await produtoraDAO.insertProdutora(produtora)
 
         if(result){ // 201            
-            classificacao.id = result
+            produtora.id = result
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
-            message.DEFAULT_MESSAGE.response    = classificacao
+            message.DEFAULT_MESSAGE.response    = produtora
         }else{ // 500
             return message.ERROR_INTERNAL_SERVER_MODEL // 500
         }
@@ -52,7 +52,7 @@ const inserirNovaClassificacao = async function(classificacao, contentType){
 }
 
 //Função para atualizar um filme
-const atualizarClassificacao = async function(classificacao, id, contentType){
+const atualizarProdutora = async function(produtora, id, contentType){
     let message = JSON.parse(JSON.stringify(config_message))
 
     try{
@@ -60,24 +60,24 @@ const atualizarClassificacao = async function(classificacao, id, contentType){
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
             //Validação para o id incorreto
-            let resultBuscarID = await buscarClassificacao(id)
+            let resultBuscarID = await buscarProdutora(id)
 
             //o retorno da função poderá ser um 400 ou 404 ou até mesmo um 500
             if(resultBuscarID.status){
-                let validar = await validarDados(classificacao, contentType)
+                let validar = await validarDados(produtora, contentType)
 
                 //Validação de campos obrigatórios para atualização (Body)
                 if(!validar){
 
-                    classificacao.id = id
+                    produtora.id = id
 
-                    let result = await classificacaoDAO.updateClassificacao(classificacao)
+                    let result = await produtoraDAO.updateProdutora(produtora)
 
                     if(result){
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
                         message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
                         message.DEFAULT_MESSAGE.message     = message.SUCESS_UPDATED_ITEM.message
-                        message.DEFAULT_MESSAGE.response    = classificacao
+                        message.DEFAULT_MESSAGE.response    = produtora
                         return message.DEFAULT_MESSAGE //200 (Atualizado)
                     }else{
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -99,14 +99,14 @@ const atualizarClassificacao = async function(classificacao, id, contentType){
     
 }
 
-const listarClassificacao = async function(){
+const listarProdutora = async function(){
 
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
     try {
 
-        let result = await classificacaoDAO.selectAllClassificacao()
+        let result = await produtoraDAO.selectAllProdutora()
 
         //Validação para verificar se DAO conseguiu processar os dados
         if(result){
@@ -115,7 +115,7 @@ const listarClassificacao = async function(){
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
-                message.DEFAULT_MESSAGE.response.classificacao = result
+                message.DEFAULT_MESSAGE.response.produtora = result
 
                 return message.DEFAULT_MESSAGE //200 
 
@@ -128,7 +128,7 @@ const listarClassificacao = async function(){
     }
 }
 
-const buscarClassificacao = async function(id){
+const buscarProdutora = async function(id){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -138,13 +138,13 @@ const buscarClassificacao = async function(id){
             message.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
             return message.ERROR_BAD_REQUEST // 400
         }else{
-            let result = await classificacaoDAO.selectByIdClassificacao(id)
+            let result = await produtoraDAO.selectByIdProdutora(id)
 
             if(result){
                 if(result.length > 0){
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                    message.DEFAULT_MESSAGE.response.classificacao  = result
+                    message.DEFAULT_MESSAGE.response.produtora  = result
 
                     return message.DEFAULT_MESSAGE //200
                 }else{
@@ -158,16 +158,16 @@ const buscarClassificacao = async function(id){
         }
 }
 
-const excluirClassificacao = async function(id){
+const excluirProdutora = async function(id){
     let message = JSON.parse(JSON.stringify(config_message))
 
     try{
         //Validação do erro 400 e do 404
-        let resultBuscarID = await buscarClassificacao(id)
+        let resultBuscarID = await buscarProdutora(id)
 
         if(resultBuscarID.status){
 
-            let result = await classificacaoDAO.deleteClassificacao(id)
+            let result = await produtoraDAO.deleteByIdProdutora(id)
 
             if(result){
                 return  message.SUCESS_DELETED_ITEM //200 (Registro excluido)
@@ -183,24 +183,30 @@ const excluirClassificacao = async function(id){
     }
 }
 
-const validarDados = async function(classificacao){
+const validarDados = async function(produtora){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
-    if(classificacao.nome == undefined || classificacao.nome == '' || classificacao.nome == null || classificacao.nome.length > 50){
-        message.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
+    if(produtora.nome_fantasia == undefined || produtora.nome_fantasia == '' || produtora.nome_fantasia == null || produtora.nome_fantasia.length > 80){
+        message.ERROR_BAD_REQUEST.field = '[NOME FANTASIA] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
-        
-    }else if(classificacao.descricao == undefined || classificacao.descricao == '' || classificacao.descricao == null ){
-        message.ERROR_BAD_REQUEST.field = '[DESCRIÇÃO] INVÁLIDO'
+    }else if(produtora.cnpj == undefined || produtora.cnpj == '' || produtora.cnpj == null || produtora.cnpj.length > 30){
+        message.ERROR_BAD_REQUEST.field = '[CNPJ] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-
-    }else if(classificacao.sigla == undefined || classificacao.sigla == '' || classificacao.sigla == null || classificacao.sigla.length > 3){
-        message.ERROR_BAD_REQUEST.field = '[SIGLA] INVÁLIDO'
+    }else if(produtora.razao_social == undefined || produtora.razao_social == '' || produtora.razao_social == null || produtora.razao_social.length > 100){
+        message.ERROR_BAD_REQUEST.field = '[RAZÃO SOCIAL] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-
-    }else if(classificacao.idade_minima == undefined || classificacao.idade_minima == '' || classificacao.idade_minima == null || classificacao.idade_minima.length > 3){
-        message.ERROR_BAD_REQUEST.field = '[IDADE MINIMA] INVÁLIDO'
+    }else if(produtora.website == undefined || produtora.website == '' || produtora.website.length > 255){
+        message.ERROR_BAD_REQUEST.field = '[WEBSITE] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(produtora.data_inicio == undefined || produtora.data_inicio == '' || produtora.data_inicio == null){
+        message.ERROR_BAD_REQUEST.field = '[DATA DE INICIO] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(produtora.status_produtora == undefined || produtora.status_produtora == '' || produtora.status_produtora == null || produtora.status_produtora.length > 15){
+        message.ERROR_BAD_REQUEST.field = '[STATUS DA PRODUTORA] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(produtora.email == undefined || produtora.email == '' || produtora.email == null || produtora.email.length > 255){
+        message.ERROR_BAD_REQUEST.field = '[EMAIL] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else{
         return false
@@ -208,9 +214,9 @@ const validarDados = async function(classificacao){
 }
 
 module.exports = {
-    inserirNovaClassificacao,
-    listarClassificacao,
-    buscarClassificacao,
-    excluirClassificacao,
-    atualizarClassificacao
+    inserirNovaProdutora,
+    listarProdutora,
+    buscarProdutora,
+    excluirProdutora,
+    atualizarProdutora
 }
