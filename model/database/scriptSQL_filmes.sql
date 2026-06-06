@@ -4,20 +4,26 @@ create database db_filmes_20261_a;
 #Ativa o uso do database de filmes
 use db_filmes_20261_a;
 
-drop database db_filmes_20261_a;
-
 #Alteração das tabelas
 alter table tbl_filmes add status varchar(15);
 show tables;
 
+#TABELA PRINCIPAL
 desc tbl_filmes;
+
+#TABELA SEM CHAVE PRIMARIA
 desc tbl_genero;
-desc tbl_classificacao;
+desc tbl_classificacao_indicativa;
 desc tbl_idioma;
 desc tbl_sexo;
 desc tbl_nacionalidade;
 desc tbl_tipo_telefone;
 desc tbl_produtora;
+
+
+#TABELA INTERMEDIA / CHAVE ESTRANGEIRA
+desc tbl_filme_genero;
+desc tbl_filme_idioma;
 
 -- ------------------------------------------------------------------------
 -- 						TABELAS SEM CHAVE ESTRANGEIRA
@@ -92,7 +98,12 @@ alter table tbl_filmes
 			add constraint FK_CLASSIFICACAO_INDICATIVA_FILME
 				foreign key (id_classificacao_indicativa)
                 references tbl_classificacao_indicativa(id);
-                
+alter table tbl_filmes
+			add column id_produtora int not null,
+            add constraint FK_PRODUTORA_FILME
+				foreign key (id_produtora)
+                references tbl_produtora(id);
+
 
 -- ------------------------------------------------------------------------------------------------------------
 
@@ -122,8 +133,10 @@ create table tbl_filme_idioma (	id int not null auto_increment primary key,
 								foreign key 	(id_idioma)
                                 references  	tbl_idioma(id)
                                 );
-                                
-desc tbl_filme_idioma;
 
 -- -------------------------------------------------------------------------------------------------------
 
+--  ------------------------------ INNER JOIN'S -----------------------------------------------------
+
+
+-- ------------------------------------------------------------------------------------------------------------

@@ -90,6 +90,47 @@ const selectByFilme_idioma = async function(id){
     }
 }
 
+const selectFilmesByIdIdioma = async function(idIdioma){
+    try {
+        let sql = `select tbl_filmes.*
+                    from tbl_filmes 
+                        inner join tbl_filme_idioma 
+                            on tbl_filmes.id = tbl_filme_idioma.id_filme
+                        inner join tbl_idioma
+                            on tbl_idioma.id = tbl_filme_idioma.id_idioma
+                where tbl_idioma.id=${idIdioma}`
+
+        let result = await knexConex.raw(sql)
+        if(Array.isArray(result)){
+            return result[0]
+        }else return false
+
+    } catch (error) {
+        return false
+    }
+}
+
+//Função para retornar os dados do Idioma filtrando pelo ID do filme
+const selectIdiomasByIdFilme = async function(idFilme){
+    try {
+        let sql = `select tbl_idioma.*
+                    from tbl_filmes 
+                        inner join tbl_filme_idioma 
+                            on tbl_filmes.id = tbl_filme_idioma.id_filme
+                        inner join tbl_idioma
+                            on tbl_idioma.id = tbl_filme_idioma.id_idioma
+                where tbl_filmes.id=${idFilme}`
+
+        let result = await knexConex.raw(sql)
+        if(Array.isArray(result)){
+            return result[0]
+        }else return false
+
+    } catch (error) {
+        return false
+    }
+}
+
 const deleteFilme_idioma = async function(id){
     try{
         let sql = `delete from tbl_filme_idioma
@@ -107,10 +148,32 @@ const deleteFilme_idioma = async function(id){
     }
 }
 
+//Função para excluir os idiomas filtrando pelo id do filme
+//Essa função será utilizada no Update do filme pois precisa apagar todos os IDIOMAS 
+//Relacionados com o FILME para INSERIR as novas relações
+const deleteIdiomasByIdFilme = async function(idFilme){
+    try{
+    let sql = `delete from tbl_filme_idioma where id_filme=${idFilme};`
+               
+    let result = await knexConex.raw(sql)
+
+    if(result){
+        return true
+    }else{
+        return false
+    }
+    }catch(error){
+        return false
+    }
+}
+
 module.exports = {
     insertFilme_idioma,
     updateFilme_idioma,
     selectAllFilme_idioma,
-    selectAllFilme_idioma,
-    deleteFilme_idioma
+    selectByFilme_idioma,
+    selectFilmesByIdIdioma,
+    selectIdiomasByIdFilme,
+    deleteFilme_idioma,
+    deleteIdiomasByIdFilme
 }

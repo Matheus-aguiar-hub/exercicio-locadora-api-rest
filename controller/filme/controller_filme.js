@@ -15,6 +15,8 @@ const filmeDAO = require('../../model/DAO/filme/filmes.js')
 //Impor de arquivos do controller
 const controller_classificacao  = require('../classificacao_indicativa/controller_classificacao.js')
 const controller_filme_genero   = require('./controller_filme_genero.js')
+const controller_produtora      = require('../produtora/controller_produtora.js')
+const controller_filme_idioma   = require('./controller_filme_idioma.js')
 
 //Função para inserir um novo filme
 const inserirNovoFilme = async function(filmes, contentType){
@@ -45,8 +47,19 @@ const inserirNovoFilme = async function(filmes, contentType){
             for (genero of filmes.genero){
              //Cria o objeto JSON com os ID's do filme e do gênero
             let filmeGenero        = {"id_filme": filmes.id, 
-                                    "id_genero": genero.id
+                                    "id_genero": genero.id,
                                 }
+
+            if (filmes.idioma && filmes.idioma.length > 0) {
+                for (let idioma of filmes.idioma) {
+                    let filmeIdioma = {
+                        "id_filme": filmes.id,
+                        "id_idioma": idioma.id,
+                        "tipo": idioma.tipo
+                    }
+                    await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma)
+                }
+            }
             //Chama a controller do filme genero para inserir os ID's
             let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
             
@@ -109,8 +122,19 @@ const atualizarFilme = async function(filmes, id, contentType){
                         for (genero of filmes.genero){
                             //Cria o objeto JSON com os ID's do filme e do gênero
                         let filmeGenero        = {"id_filme": filmes.id, 
-                                                "id_genero": genero.id
+                                                "id_genero": genero.id,
                                             }
+
+                    if (filmes.idioma && filmes.idioma.length > 0) {
+                        for (let idioma of filmes.idioma) {
+                            let filmeIdioma = {
+                                "id_filme": filmes.id,
+                                "id_idioma": idioma.id,
+                                "tipo": idioma.tipo
+                            }
+                            await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma)
+                        }
+                    }
                         //Chama a controller do filme genero para inserir os ID's
                         let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
                         
@@ -174,6 +198,17 @@ const listarFilme = async function(){
                         //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
                         delete filmes.id_classificacao_indicativa 
                     }
+
+                    //Busca na controller da produtora o ID referente aos dados do filme
+                    let resultProdutora = await controller_produtora.buscarProdutora(filmes.id_produtora)
+                    //Se a produtora foi encontrada
+                    if(resultProdutora.status){
+                        //Cria o atributo produtora no filme e adiciona o objeto completo retornado da controller dela
+                        filmes.produtora = resultProdutora.response.produtora
+                        //Apaga o atributo id_produtora do filme para limpar o JSON
+                        delete filmes.id_produtora
+                    }
+
                     //Cria o objeto de gênero relacionado ao Filme
                     let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
                     // console.log(resultGenero)
@@ -311,6 +346,9 @@ const validarDados = async function(filmes){
         //  Validação para a FK da classificação
     }else if(filmes.id_classificacao_indicativa == undefined || filmes.id_classificacao_indicativa == ''  || filmes.id_classificacao_indicativa == null || isNaN(filmes.id_classificacao_indicativa) || filmes.id_classificacao_indicativa.length <=0){
         message.ERROR_BAD_REQUEST.field = '[ID_CLASSIFICAÇÃO_INDICATIVA] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(filmes.id_produtora == undefined || filmes.id_produtora == ''  || filmes.id_produtora == null || isNaN(filmes.id_produtora) || filmes.id_produtora.length <=0){
+        message.ERROR_BAD_REQUEST.field = '[ID_PRODUTORA] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else{
         return false
