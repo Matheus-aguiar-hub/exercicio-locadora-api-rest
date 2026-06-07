@@ -4,6 +4,25 @@ create database if not exists db_filmes_20261_a;
 #Ativa o uso do database de filmes
 use db_filmes_20261_a;
 
+#Tabela sem chave estrangeira
+desc tbl_genero;
+desc tbl_classificacao_indicativa;
+desc tbl_idioma;
+desc tbl_sexo;
+desc tbl_nacionalidade;
+desc tbl_tipo_telefone;
+desc tbl_produtora;
+
+#Tabela principal
+desc tbl_filmes;
+desc tbl_pessoa;
+
+#Tabela intermediaria
+desc tbl_filme_genero;
+desc tbl_filme_idioma;
+desc tbl_filme_pessoa;
+desc tbl_telefone;
+
 -- ------------------------------------------------------------------------
 -- 						TABELAS SEM CHAVE ESTRANGEIRA
 -- ------------------------------------------------------------------------
