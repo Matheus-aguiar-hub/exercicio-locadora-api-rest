@@ -23,7 +23,7 @@ const bodyParserJSON = bodyParser.json()
 const app = express()
 
 //Carregando o arquivo YAML para o swagger
-const swaggerDocument = YAML.load('./swagger.yaml')
+const swaggerDocument = YAML.load('./openapi.yaml')
 
 const corsOptions = {
     origin: ['*'],
