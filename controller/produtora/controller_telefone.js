@@ -1,38 +1,38 @@
 /****************************************************************
  * Objetivo: Arquivo responsável pela validação, tratamento e
  *          Manipulação de dados para o CRUD
- * Data: 08/05/2026
+ * Data: 06/06/2026
  * Autor: Matheus Aguiar
- * Versão: 1.1
+ * Versão: 1.2
 ****************************************************************/
 
 //Import do arquivo de padronização de mensagens
 const config_message = require('../modulo/configMessages.js') 
 
-const filme_idiomaDAO = require('../../model/DAO/filme_idioma/filme_idioma.js')
+const telefoneDAO = require('../../model/DAO/telefone/telefone.js')
 
-const inserirNovoFilmeIdioma = async function(filmeIdioma, contentType){
+const inserirNovoTelefone = async function(telefone, contentType){
 
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
     if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
 
-    let validar = await validarDados(filmeIdioma)
+    let validar = await validarDados(telefone)
 
     if(validar){
         return validar // 400
     }
     else{
 
-        let result = await filme_idiomaDAO.insertFilmeIdioma(filmeIdioma)
+        let result = await telefoneDAO.insertTelefone(telefone)
 
         if(result){ // 201
-            filmeIdioma.id = result
+            telefone.id = result
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
-            message.DEFAULT_MESSAGE.response    = filmeIdioma
+            message.DEFAULT_MESSAGE.response    = telefone
         }else{ // 500
             return message.ERROR_INTERNAL_SERVER_MODEL // 500
         }
@@ -47,27 +47,27 @@ const inserirNovoFilmeIdioma = async function(filmeIdioma, contentType){
     }
 }
 
-const atualizarFilmeIdioma = async function(filmeIdioma, id, contentType){
+const atualizarTelefone = async function(telefone, id, contentType){
     let message = JSON.parse(JSON.stringify(config_message))
     
     try{
 
-            let resultBuscarID = await buscarFilmeIdioma(id)
+            let resultBuscarID = await buscarTelefone(id)
             
             if(resultBuscarID.status){
-                let validar = await validarDados(filmeIdioma)
+                let validar = await validarDados(telefone)
  
                 if(!validar){
 
-                    filmeIdioma.id = id
+                    telefone.id = id
 
-                    let result = await filme_idiomaDAO.updateFilmeIdioma(filmeIdioma)
+                    let result = await telefoneDAO.updateTelefone(telefone)
 
                     if(result){
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
                         message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
                         message.DEFAULT_MESSAGE.message     = message.SUCESS_UPDATED_ITEM.message
-                        message.DEFAULT_MESSAGE.response    = filmeIdioma
+                        message.DEFAULT_MESSAGE.response    = telefone
                         return message.DEFAULT_MESSAGE //200 (Atualizado)
                     }else{
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
@@ -86,14 +86,14 @@ const atualizarFilmeIdioma = async function(filmeIdioma, id, contentType){
     
 }
 
-const listarFilmeIdioma = async function(){
+const listarTelefone = async function(){
 
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
     try {
 
-        let result = await filme_idiomaDAO.selectAllFilmeIdioma()
+        let result = await telefoneDAO.selectAllTelefone()
 
         //Validação para verificar se DAO conseguiu processar os dados
         if(result){
@@ -102,7 +102,7 @@ const listarFilmeIdioma = async function(){
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
-                message.DEFAULT_MESSAGE.response.filme_idioma = result
+                message.DEFAULT_MESSAGE.response.telefone = result
 
                 return message.DEFAULT_MESSAGE //200 
 
@@ -115,23 +115,23 @@ const listarFilmeIdioma = async function(){
     }
 }
 
-const buscarFilmeIdIdioma = async function(idIdioma){
+const buscarTelefone = async function(id){
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
    let message = JSON.parse(JSON.stringify(config_message))
 
        try {
            //Validação para garantir que o ID seja válido
-           if(idIdioma == undefined || idIdioma == '' || idIdioma == null || isNaN(idIdioma)){
-           message.ERROR_BAD_REQUEST.field = '[ID_IDIOMA] INVÁLIDO'
+           if(id == undefined || id == '' || id == null || isNaN(id)){
+           message.ERROR_BAD_REQUEST.field = '[ID_TELEFONE] INVÁLIDO'
            return message.ERROR_BAD_REQUEST // 400
        }else{
-           let result = await filme_idiomaDAO.selectFilmesByIdIdioma(idIdioma)
+           let result = await telefoneDAO.selectByIdTelefone(id)
 
            if(result){
                if(result.length > 0){
                    message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                    message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                   message.DEFAULT_MESSAGE.response.filme_idioma = result
+                   message.DEFAULT_MESSAGE.response.telefone = result
 
                    return message.DEFAULT_MESSAGE //200
                }else{
@@ -145,28 +145,29 @@ const buscarFilmeIdIdioma = async function(idIdioma){
        }
 }
 
-const buscarIdiomaIdFilme = async function(idFilme){
+//Função para buscar os telefones pelo ID da produtora
+const buscarTelefoneIdProdutora = async function(idProdutora){
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
    let message = JSON.parse(JSON.stringify(config_message))
 
        try {
            //Validação para garantir que o ID seja válido
-           if(idFilme == undefined || idFilme == '' || idFilme == null || isNaN(idFilme)){
-           message.ERROR_BAD_REQUEST.field = '[ID_FILME] INVÁLIDO'
+           if(idProdutora == undefined || idProdutora == '' || idProdutora == null || isNaN(idProdutora)){
+           message.ERROR_BAD_REQUEST.field = '[ID_PRODUTORA] INVÁLIDO'
            return message.ERROR_BAD_REQUEST // 400
        }else{
-           let result = await filme_idiomaDAO.selectIdiomasByIdFilme(idFilme)
+           //CORREÇÃO: chama a query correta que filtra por id_produtora
+           let result = await telefoneDAO.selectTelefonesByIdProdutora(idProdutora)
 
            if(result){
                if(result.length > 0){
                    message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                    message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                   message.DEFAULT_MESSAGE.response.filme_idioma = result
+                   message.DEFAULT_MESSAGE.response.telefone = result
                    return message.DEFAULT_MESSAGE //200
                }else{
                    return message.ERROR_NOT_FOUND //404
                }
-           // CORREÇÃO DA LINHA ABAIXO (Adicionado o 'return'):
            }else {
                return message.ERROR_INTERNAL_SERVER_MODEL // 500 (model)
            }
@@ -177,43 +178,17 @@ const buscarIdiomaIdFilme = async function(idFilme){
        }
 }
 
-const buscarFilmeIdioma = async function(idFilme){
-     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
-    let message = JSON.parse(JSON.stringify(config_message))
-
-        try {
-            //Validação para garantir que o ID seja válido
-            if(idFilme == undefined || idFilme == '' || idFilme == null || isNaN(idFilme)){
-            message.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
-            return message.ERROR_BAD_REQUEST // 400
-        }else{
-            let result = await filme_idiomaDAO.selectAllFilmeIdioma()
-
-            if(result){
-                if(result.length > 0){
-                    message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
-                    message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                    message.DEFAULT_MESSAGE.response.filme_idioma = result
-
-                    return message.DEFAULT_MESSAGE //200
-                }else{
-                    return message.ERROR_NOT_FOUND //404
-                }
-            }else result = message.ERROR_INTERNAL_SERVER_MODEL // 500 (model)
-        }
-
-        } catch (error) {
-            return message.ERROR_INTERNAL_SERVER_CONTROLLER
-        }
-}
-const excluirFilmeIdioma = async function(idFilme){
+//Função para excluir todos os telefones de uma produtora pelo ID da produtora
+//Utilizada no Update e Delete da produtora
+const excluirTelefoneProdutora = async function(idProdutora){
     let message = JSON.parse(JSON.stringify(config_message))
 
     try{
-        if(idFilme == undefined || idFilme == '' || idFilme == null || isNaN(idFilme)){
+        if(idProdutora == undefined || idProdutora == '' || idProdutora == null || isNaN(idProdutora)){
             return false
         }
-        let result = await filme_idiomaDAO.deleteIdiomasByIdFilme(idFilme)
+        //CORREÇÃO: chama deleteByIdProdutora (exclui todos os telefones da produtora)
+        let result = await telefoneDAO.deleteByIdProdutora(idProdutora)
         if(result){
             return true 
         }else{
@@ -225,22 +200,20 @@ const excluirFilmeIdioma = async function(idFilme){
     }
 }
 
-const validarDados = async function(filme_idioma){
+const validarDados = async function(produtora_telefone){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
 
-    if(filme_idioma.tipo == undefined || filme_idioma.tipo == '' || filme_idioma.tipo == null || filme_idioma.tipo.length > 100){
-        message.ERROR_BAD_REQUEST.field = '[TIPO] INVÁLIDO'
+    if(produtora_telefone.numero == undefined || produtora_telefone.numero == '' || produtora_telefone.numero == null || produtora_telefone.numero.length > 20){
+        message.ERROR_BAD_REQUEST.field = '[NUMERO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST //400
         
-    }else if(filme_idioma.id_idioma == undefined || filme_idioma.id_idioma == '' || filme_idioma.id_idioma == null || isNaN(filme_idioma.id_idioma)){
-            // CORREÇÃO: Alinhado o nome do campo com a validação real
-            message.ERROR_BAD_REQUEST.field = '[ID_IDIOMA] INVÁLIDO'
+    }else if(produtora_telefone.id_produtora == undefined || produtora_telefone.id_produtora == '' || produtora_telefone.id_produtora == null || isNaN(produtora_telefone.id_produtora)){
+            message.ERROR_BAD_REQUEST.field = '[ID_PRODUTORA] INVÁLIDO'
             return message.ERROR_BAD_REQUEST
             
-    }else if(filme_idioma.id_filme == undefined || filme_idioma.id_filme == '' || filme_idioma.id_filme == null || isNaN(filme_idioma.id_filme)){
-            // CORREÇÃO: Adicionada a validação do ID do Filme que faltava para a tabela intermediária
-            message.ERROR_BAD_REQUEST.field = '[ID_FILME] INVÁLIDO'
+    }else if(produtora_telefone.id_tipo_telefone == undefined || produtora_telefone.id_tipo_telefone == '' || produtora_telefone.id_tipo_telefone == null || isNaN(produtora_telefone.id_tipo_telefone)){
+            message.ERROR_BAD_REQUEST.field = '[ID_TIPO_TELEFONE] INVÁLIDO'
             return message.ERROR_BAD_REQUEST
     }else{
             return false
@@ -248,10 +221,10 @@ const validarDados = async function(filme_idioma){
 }
 
 module.exports = {
-    inserirNovoFilmeIdioma,
-    listarFilmeIdioma,
-    buscarFilmeIdioma,
-    buscarIdiomaIdFilme,
-    excluirFilmeIdioma,
-    atualizarFilmeIdioma
+    inserirNovoTelefone,
+    atualizarTelefone,
+    listarTelefone,
+    buscarTelefone,
+    buscarTelefoneIdProdutora,
+    excluirTelefoneProdutora
 }

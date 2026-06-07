@@ -15,17 +15,17 @@ const knexConfig = require('../../database_config_knex/knex_file.js')
 //Criar a conexão com o BD Mysql
 const knexConex = knex(knexConfig.development)
 
-const insertFilmeIdioma = async function(filme_idioma){
+const insertFilmePessoa = async function(filmePessoa){
     try {
-        let sql = `insert into tbl_filme_idioma (
-                            tipo, 
-                            id_idioma,
-                            id_filme
+        let sql = `insert into tbl_filme_pessoa (
+                            funcao, 
+                            id_filme,
+                            id_pessoa
                             )
                     values(
-                            '${filme_idioma.tipo}',
-                            ${filme_idioma.id_idioma},
-                            ${filme_idioma.id_filme}
+                            '${filmePessoa.funcao}',
+                            '${filmePessoa.id_filme}',
+                            '${filmePessoa.id_pessoa}'
                             );`
     
         //Executar o scriptSQL no banco de dados
@@ -35,18 +35,19 @@ const insertFilmeIdioma = async function(filme_idioma){
         else return false
         
         }catch(error){
+            // console.log(error)
             return false
         }
 }
 
-const updateFilmeIdioma = async function(filme_idioma){
+const updateFilmePessoa = async function(filmePessoa){
         try {
             // Script para atualizar os dados do BD
-            let sql = `update tbl_filme_idioma set
-                            tipo            = '${filme_idioma.tipo}',
-                            id_idioma       = '${filme_idioma.id_idioma}',
-                            id_filme        = '${filme_idioma.id_filme}'
-                            where id        =  ${filme_idioma.id}`
+            let sql = `update tbl_filme_pessoa set
+                            funcao          = '${filmePessoa.funcao}',
+                            id_filme        = '${filmePessoa.id_filme}',
+                            id_pessoa       = '${filmePessoa.id_pessoa}'
+                            where id        =  ${filmePessoa.id}`
               
             // Executa o script SQL no BD
             let result = await knexConex.raw(sql)
@@ -60,9 +61,9 @@ const updateFilmeIdioma = async function(filme_idioma){
         }
 }
 
-const selectAllFilmeIdioma = async function(){
+const selectAllFilmePessoa = async function(){
     try {
-        let sql = 'select * from tbl_filme_idioma order by id desc'
+        let sql = 'select * from tbl_filme_pessoa order by id desc'
 
         let result = await knexConex.raw(sql)
 
@@ -77,9 +78,9 @@ const selectAllFilmeIdioma = async function(){
     }
 }
 
-const selectByFilmeIdioma = async function(id){
+const selectByIdFilmePessoa = async function(id){
     try {
-        let sql = `select * from tbl_filme_idioma where id=${id}`
+        let sql = `select * from tbl_filme_pessoa where id=${id}`
 
         let result = await knexConex.raw(sql)
 
@@ -92,15 +93,15 @@ const selectByFilmeIdioma = async function(id){
     }
 }
 
-const selectFilmesByIdIdioma = async function(idIdioma){
+const selectFilmesByIdPessoa = async function(idPessoa){
     try {
         let sql = `select tbl_filmes.*
                     from tbl_filmes 
-                        inner join tbl_filme_idioma 
-                            on tbl_filmes.id = tbl_filme_idioma.id_filme
-                        inner join tbl_idioma
-                            on tbl_idioma.id = tbl_filme_idioma.id_idioma
-                where tbl_idioma.id=${idIdioma}`
+                        inner join tbl_filme_pessoa 
+                            on tbl_filmes.id = tbl_filme_pessoa.id_filme
+                        inner join tbl_pessoa
+                            on tbl_pessoa.id = tbl_filme_pessoa.id_pessoa
+                where tbl_pessoa.id=${idPessoa}`
 
         let result = await knexConex.raw(sql)
         if(Array.isArray(result)){
@@ -113,14 +114,14 @@ const selectFilmesByIdIdioma = async function(idIdioma){
 }
 
 //Função para retornar os dados do Idioma filtrando pelo ID do filme
-const selectIdiomasByIdFilme = async function(idFilme){
+const selectPessoaByIdFilme = async function(idFilme){
     try {
-        let sql = `select tbl_idioma.*, tbl_filme_idioma.tipo
+        let sql = `select tbl_pessoa.*, tbl_filme_pessoa.funcao
                     from tbl_filmes 
-                        inner join tbl_filme_idioma 
-                            on tbl_filmes.id = tbl_filme_idioma.id_filme
-                        inner join tbl_idioma
-                            on tbl_idioma.id = tbl_filme_idioma.id_idioma
+                        inner join tbl_filme_pessoa 
+                            on tbl_filmes.id = tbl_filme_pessoa.id_filme
+                        inner join tbl_pessoa
+                            on tbl_pessoa.id = tbl_filme_pessoa.id_pessoa
                 where tbl_filmes.id=${idFilme}`
 
         let result = await knexConex.raw(sql)
@@ -133,9 +134,9 @@ const selectIdiomasByIdFilme = async function(idFilme){
     }
 }
 
-const deleteFilmeIdioma = async function(id){
+const deleteFilmePessoa = async function(id){
     try{
-        let sql = `delete from tbl_filme_idioma
+        let sql = `delete from tbl_filme_pessoa
                      where id=${id}`
 
     let result = await knexConex.raw(sql)
@@ -153,9 +154,9 @@ const deleteFilmeIdioma = async function(id){
 //Função para excluir os idiomas filtrando pelo id do filme
 //Essa função será utilizada no Update do filme pois precisa apagar todos os IDIOMAS 
 //Relacionados com o FILME para INSERIR as novas relações
-const deleteIdiomasByIdFilme = async function(idFilme){
+const deletePessoasByIdFilme = async function(idPessoa){
     try{
-    let sql = `delete from tbl_filme_idioma where id_filme=${idFilme};`
+    let sql = `delete from tbl_filme_pessoa where id_filme=${idPessoa};`
                
     let result = await knexConex.raw(sql)
 
@@ -170,12 +171,12 @@ const deleteIdiomasByIdFilme = async function(idFilme){
 }
 
 module.exports = {
-    insertFilmeIdioma,
-    updateFilmeIdioma,
-    selectAllFilmeIdioma,
-    selectByFilmeIdioma,
-    selectFilmesByIdIdioma,
-    selectIdiomasByIdFilme,
-    deleteFilmeIdioma,
-    deleteIdiomasByIdFilme
+    insertFilmePessoa,
+    updateFilmePessoa,
+    selectAllFilmePessoa,
+    selectByIdFilmePessoa,
+    selectFilmesByIdPessoa,
+    selectPessoaByIdFilme,
+    deleteFilmePessoa,
+    deletePessoasByIdFilme
 }

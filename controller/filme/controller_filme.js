@@ -3,7 +3,7 @@
  *          Manipulação de dados para o CRUD de filmes
  * Data: 17/04/2026
  * Autor: Matheus Aguiar
- * Versão: 1.0
+ * Versão: 1.2
 ****************************************************************/
 
 //Import do arquivo de padronização de mensagens
@@ -17,6 +17,7 @@ const controller_classificacao  = require('../classificacao_indicativa/controlle
 const controller_filme_genero   = require('./controller_filme_genero.js')
 const controller_produtora      = require('../produtora/controller_produtora.js')
 const controller_filme_idioma   = require('./controller_filme_idioma.js')
+const controller_filme_pessoa   = require('./controller_filme_pessoa.js')
 
 //Função para inserir um novo filme
 const inserirNovoFilme = async function(filmes, contentType){
@@ -43,13 +44,24 @@ const inserirNovoFilme = async function(filmes, contentType){
             //Criando o atributo id no Json do filme e colocando o novo ID gerado após o insert
             filmes.id = result
 
+            //GENERO
             //Manipulação de dados para inserir os Generos do Filme
-            for (genero of filmes.genero){
+            for (let genero of filmes.genero){
              //Cria o objeto JSON com os ID's do filme e do gênero
             let filmeGenero        = {"id_filme": filmes.id, 
                                     "id_genero": genero.id,
+                                    "id_produtora": filmes.id_produtora
                                 }
 
+            //Chama a controller do filme genero para inserir os ID's
+            let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
+            
+            if(!resultInsertGenero.status){
+                return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
+            }
+            }
+
+            //IDIOMA
             if (filmes.idioma && filmes.idioma.length > 0) {
                 for (let idioma of filmes.idioma) {
                     let filmeIdioma = {
@@ -57,17 +69,46 @@ const inserirNovoFilme = async function(filmes, contentType){
                         "id_idioma": idioma.id,
                         "tipo": idioma.tipo
                     }
-                    await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma)
+                    let resultInsertIdioma = await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma, contentType)
+                    
+                    if(!resultInsertIdioma.status){
+                        return message.SUCCESS_CREATED_WARNING
+                    }
                 }
             }
-            //Chama a controller do filme genero para inserir os ID's
-            let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
-            
-            if(!resultInsertGenero.status){
-                return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
+
+            //PESSOA
+            if (filmes.pessoa && filmes.pessoa.length > 0) {
+                for (let pessoa of filmes.pessoa) {
+                    let filmePessoa = {
+                        "id_filme": filmes.id,
+                        "id_pessoa": pessoa.id,
+                        "funcao": pessoa.funcao
+                    }
+                    let resultInsertPessoa = await controller_filme_pessoa.inserirNovoFilmePessoa(filmePessoa, contentType)
+                    
+                    if(!resultInsertPessoa.status){
+                        return message.SUCCESS_CREATED_WARNING
+                    }
+                }
             }
 
+            //BUSCA GENERO, IDIOMA E PESSOA INSERIDOS
+            let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
+            if(resultGenero.status){
+                filmes.genero = resultGenero.response.filme_genero
             }
+
+            let resultIdioma = await controller_filme_idioma.buscarIdiomaIdFilme(filmes.id)
+            if(resultIdioma.status){
+                filmes.idioma = resultIdioma.response.filme_idioma
+            }
+
+            let resultPessoa = await controller_filme_pessoa.buscarPessoaByIdFilme(filmes.id)
+            if(resultPessoa.status){
+                filmes.pessoa = resultPessoa.response.filme_pessoa
+            }
+
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
@@ -113,36 +154,81 @@ const atualizarFilme = async function(filmes, id, contentType){
 
                     if(result){
 
-                        //Manipulação de dados na tabela de relação entre filmes e genero
+                        //GENERO
+                        //Exclui todos os gêneros relacionados com o filme para reinserir
                         let resultDeleteGenero = await controller_filme_genero.excluirGenerosIdFilme(filmes.id)
 
                         //Após a exclusão de todos os gêneros relacionados com o filme 
                         if(resultDeleteGenero.status){
-                                        //Manipulação de dados para inserir os Generos do Filme
-                        for (genero of filmes.genero){
-                            //Cria o objeto JSON com os ID's do filme e do gênero
-                        let filmeGenero        = {"id_filme": filmes.id, 
-                                                "id_genero": genero.id,
-                                            }
+                            //Manipulação de dados para inserir os Generos do Filme
+                            for (let genero of filmes.genero){
+                                //Cria o objeto JSON com os ID's do filme e do gênero
+                                let filmeGenero = {"id_filme": filmes.id, 
+                                                  "id_genero": genero.id,
+                                                  "id_produtora": filmes.id_produtora
+                                                 }
 
-                    if (filmes.idioma && filmes.idioma.length > 0) {
-                        for (let idioma of filmes.idioma) {
-                            let filmeIdioma = {
-                                "id_filme": filmes.id,
-                                "id_idioma": idioma.id,
-                                "tipo": idioma.tipo
-                            }
-                            await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma)
-                        }
-                    }
-                        //Chama a controller do filme genero para inserir os ID's
-                        let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
+                                //Chama a controller do filme genero para inserir os ID's
+                                let resultInsertGenero = await controller_filme_genero.inserirNovoFilmeGenero(filmeGenero)
                         
-                        if(!resultInsertGenero.status){
-                            return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
-                            
-                        }   
+                                if(!resultInsertGenero.status){
+                                    return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
+                                }
+                            }
+                        }
 
+                        //IDIOMA
+                        //Exclui todos os idiomas relacionados com o filme para reinserir
+                        await controller_filme_idioma.excluirFilmeIdioma(filmes.id)
+
+                        if (filmes.idioma && filmes.idioma.length > 0) {
+                            for (let idioma of filmes.idioma) {
+                                let filmeIdioma = {
+                                    "id_filme": filmes.id,
+                                    "id_idioma": idioma.id,
+                                    "tipo": idioma.tipo,
+                                    "id_produtora": filmes.id_produtora
+                                }
+                                let resultInsertIdioma = await controller_filme_idioma.inserirNovoFilmeIdioma(filmeIdioma, contentType)
+
+                                if(!resultInsertIdioma.status){
+                                    return message.SUCCESS_CREATED_WARNING
+                                }
+                            }
+                        }
+
+                        //PESSOA
+                        //Exclui todas as pessoas relacionadas com o filme para reinserir
+                        await controller_filme_pessoa.excluirFilmePessoa(filmes.id)
+
+                        if (filmes.pessoa && filmes.pessoa.length > 0) {
+                            for (let pessoa of filmes.pessoa) {
+                                let filmePessoa = {
+                                    "id_filme": filmes.id,
+                                    "id_pessoa": pessoa.id,
+                                    "funcao": pessoa.funcao
+                                }
+                                let resultInsertPessoa = await controller_filme_pessoa.inserirNovoFilmePessoa(filmePessoa, contentType)
+                                if(!resultInsertPessoa.status){
+                                    return message.SUCCESS_CREATED_WARNING
+                                }
+                            }
+                        }
+
+                        //BUSCA GENERO, IDIOMA E PESSOA ATUALIZADOS
+                        let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
+                        if(resultGenero.status){
+                            filmes.genero = resultGenero.response.filme_genero
+                        }
+
+                        let resultIdioma = await controller_filme_idioma.buscarIdiomaIdFilme(filmes.id)
+                        if(resultIdioma.status){
+                            filmes.idioma = resultIdioma.response.filme_idioma
+                        }
+
+                        let resultPessoa = await controller_filme_pessoa.buscarPessoaByIdFilme(filmes.id)
+                        if(resultPessoa.status){
+                            filmes.pessoa = resultPessoa.response.filme_pessoa
                         }
 
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
@@ -152,10 +238,7 @@ const atualizarFilme = async function(filmes, id, contentType){
                         return message.DEFAULT_MESSAGE //200 (Atualizado)
                     }else{
                         return message.ERROR_INTERNAL_SERVER_MODEL //500
-
                     }
-
-                }
 
                 }else{
                     return validar //400
@@ -168,7 +251,6 @@ const atualizarFilme = async function(filmes, id, contentType){
         }
     }catch (error){
         return message.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (Controller)
-
     }
 }
 
@@ -187,8 +269,9 @@ const listarFilme = async function(){
             //Validação para verificar se existe conteúdo no array
             if(result.length > 0 ){
 
+                //FILMES
                 //Percorre O ARRAY de filmes para identificar os dados de classificação
-                for(filmes of result){
+                for(let filmes of result){
                     //Busca na controller da classificação o ID referente aos dados
                     let resultClassificacao = await controller_classificacao.buscarClassificacao(filmes.id_classificacao_indicativa)
                     //Se a classificação foi encontrada
@@ -199,23 +282,37 @@ const listarFilme = async function(){
                         delete filmes.id_classificacao_indicativa 
                     }
 
+                    //PRODUTORA
                     //Busca na controller da produtora o ID referente aos dados do filme
                     let resultProdutora = await controller_produtora.buscarProdutora(filmes.id_produtora)
                     //Se a produtora foi encontrada
                     if(resultProdutora.status){
-                        //Cria o atributo produtora no filme e adiciona o objeto completo retornado da controller dela
-                        filmes.produtora = resultProdutora.response.produtora
+                        //Cria o atributo produtora no filme como array
+                        filmes.produtora = [resultProdutora.response.produtora]
                         //Apaga o atributo id_produtora do filme para limpar o JSON
                         delete filmes.id_produtora
                     }
 
+                    //GENERO
                     //Cria o objeto de gênero relacionado ao Filme
                     let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
-                    // console.log(resultGenero)
                     if(resultGenero.status){
                         filmes.genero = resultGenero.response.filme_genero
                     }
+
+                    //IDIOMA
+                    let resultIdioma = await controller_filme_idioma.buscarIdiomaIdFilme(filmes.id)
+                    if(resultIdioma.status){
+                        filmes.idioma = resultIdioma.response.filme_idioma
+                    }
+
+                    //PESSOA
+                    let resultPessoa = await controller_filme_pessoa.buscarPessoaByIdFilme(filmes.id)
+                    if(resultPessoa.status){
+                        filmes.pessoa = resultPessoa.response.filme_pessoa
+                    }
                 }
+
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
@@ -228,6 +325,7 @@ const listarFilme = async function(){
         }else return message.ERROR_INTERNAL_SERVER_MODEL //500 (model)
 
     } catch (error) {
+       
         return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller) 
     }
 }
@@ -247,9 +345,10 @@ const buscarFilme = async function(id){
 
             if(result){
                 if(result.length > 0){
-
+                
+                //FILMES
                 //Percorre O ARRAY de filmes para identificar os dados de classificação
-                for(filmes of result){
+                for(let filmes of result){
                     //Busca na controller da classificação o ID referente aos dados
                     let resultClassificacao = await controller_classificacao.buscarClassificacao(filmes.id_classificacao_indicativa)
                     //Se a classificação foi encontrada
@@ -259,12 +358,37 @@ const buscarFilme = async function(id){
                         //Apaga o atributo id_classificação_indicativa do filme para não ficar repetido
                         delete filmes.id_classificacao_indicativa 
                     }
+
+                    //GENERO
                     //Cria o objeto de gênero relacionado ao Filme
                     let resultGenero = await controller_filme_genero.buscarGeneroIdFilme(filmes.id)
-                    // console.log(resultGenero)
                     if(resultGenero.status){
                         filmes.genero = resultGenero.response.filme_genero
                     }
+
+                    //PRODUTORA
+                    //Busca na controller da produtora o ID referente aos dados do filme
+                    let resultProdutora = await controller_produtora.buscarProdutora(filmes.id_produtora)
+                    //Se a produtora foi encontrada
+                    if(resultProdutora.status){
+                        //Cria o atributo produtora no filme como array
+                        filmes.produtora = [resultProdutora.response.produtora]
+                        //Apaga o atributo id_produtora do filme para limpar o JSON
+                        delete filmes.id_produtora
+                    }
+
+                    //IDIOMA
+                    let resultIdioma = await controller_filme_idioma.buscarIdiomaIdFilme(filmes.id)
+                    if(resultIdioma.status){
+                        filmes.idioma = resultIdioma.response.filme_idioma
+                    }
+
+                    //PESSOA
+                    let resultPessoa = await controller_filme_pessoa.buscarPessoaByIdFilme(filmes.id)
+                    if(resultPessoa.status){
+                        filmes.pessoa = resultPessoa.response.filme_pessoa
+                    }
+                    
                 }
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
@@ -292,7 +416,17 @@ const excluirFilme = async function(id){
 
         //Validação para verificar se o status é verdadeiro(se existe o filme)
         if(resultBuscarID.status){
-            //Chamar a função do DAO para excluir o filme
+            
+            // 1. Limpa o id de genero asssociado a esse filme
+            await controller_filme_genero.excluirGenerosIdFilme(id)
+            
+            // 2. Limpa o id de idiomas asssociado a esse filme 
+            await controller_filme_idioma.excluirFilmeIdioma(id)
+
+            // 3. Limpa o id de pessoas asssociado a esse filme
+            await controller_filme_pessoa.excluirFilmePessoa(id)
+
+            // 4. Agora que o caminho está livre, chama o DAO para excluir o filme principal
             let result = await filmeDAO.deleteFilme(id)
 
             if(result){
@@ -331,7 +465,7 @@ const validarDados = async function(filmes){
         message.ERROR_BAD_REQUEST.field = '[SINOPSE] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
 
-    }else if(isNaN(filmes.avaliacao) || filmes.avaliacao.length > 3){
+    }else if(filmes.avaliacao == undefined || filmes.avaliacao == '' || filmes.avaliacao == null || isNaN(filmes.avaliacao) || filmes.avaliacao.split('.')[0].length > 1){
         message.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
 
@@ -349,6 +483,18 @@ const validarDados = async function(filmes){
         return message.ERROR_BAD_REQUEST
     }else if(filmes.id_produtora == undefined || filmes.id_produtora == ''  || filmes.id_produtora == null || isNaN(filmes.id_produtora) || filmes.id_produtora.length <=0){
         message.ERROR_BAD_REQUEST.field = '[ID_PRODUTORA] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(!await controller_classificacao.buscarClassificacao(filmes.id_classificacao_indicativa)){
+        message.ERROR_BAD_REQUEST.field = '[ID_CLASSIFICAÇÃO_INDICATIVA] NÃO ENCONTRADO'
+        return message.ERROR_BAD_REQUEST
+    }else if(filmes.genero == undefined || !Array.isArray(filmes.genero) || filmes.genero.length == 0){
+        message.ERROR_BAD_REQUEST.field = '[GENERO] INVÁLIDO - Deve ser um array com pelo menos 1 item'
+        return message.ERROR_BAD_REQUEST
+    }else if(filmes.idioma == undefined || !Array.isArray(filmes.idioma) || filmes.idioma.length == 0){
+        message.ERROR_BAD_REQUEST.field = '[IDIOMA] INVÁLIDO - Deve ser um array com pelo menos 1 item'
+        return message.ERROR_BAD_REQUEST
+    }else if(filmes.pessoa == undefined || !Array.isArray(filmes.pessoa) || filmes.pessoa.length == 0){
+        message.ERROR_BAD_REQUEST.field = '[PESSOA] INVÁLIDO - Deve ser um array com pelo menos 1 item'
         return message.ERROR_BAD_REQUEST
     }else{
         return false

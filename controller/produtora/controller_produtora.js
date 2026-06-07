@@ -3,16 +3,17 @@
  *          Manipulação de dados para o CRUD de filmes
  * Data: 04/06/2026
  * Autor: Matheus Aguiar
- * Versão: 1.0
+ * Versão: 1.2
 ****************************************************************/
 
 //Import do arquivo de padronização de mensagens
 const config_message = require('../modulo/configMessages.js') 
 
-//Import do arquivo DAO para fazer o CRUD do filme no banco de dados
+//Import do arquivo DAO para fazer o CRUD da produtora no banco de dados
 const produtoraDAO = require('../../model/DAO/produtora/produtora.js')
+const controller_telefone = require('./controller_telefone.js')
 
-//Função para inserir um novo filme
+//Função para inserir uma nova produtora
 const inserirNovaProdutora = async function(produtora, contentType){
 
     //Criando um clone do objeto JSON para manipular a sua estrutura local sem modificar a estrutura original
@@ -31,8 +32,34 @@ const inserirNovaProdutora = async function(produtora, contentType){
 
         let result = await produtoraDAO.insertProdutora(produtora)
 
-        if(result){ // 201            
+        if(result){ // 201
+            //Criando o atributo id no Json da produtora e colocando o novo ID gerado após o insert
             produtora.id = result
+
+            //TELEFONE
+            //Manipulação de dados para inserir os Telefones da Produtora
+            for (let telefone of produtora.telefone){
+                //Cria o objeto JSON com os dados do telefone
+                let produtoraTelefone = {
+                    "id_tipo_telefone": telefone.id,
+                    "id_produtora":     produtora.id,
+                    "numero":           telefone.numero
+                }
+
+                //Chama a controller do telefone para inserir os dados
+                let resultInsertTelefone = await controller_telefone.inserirNovoTelefone(produtoraTelefone, contentType)
+                
+                if(!resultInsertTelefone.status){
+                    return message.SUCCESS_CREATED_WARNING // 201 com alerta de dados não inseridos
+                }
+            }
+
+            //BUSCANDO TELEFONE PARA RETORNAR NA RESPONSE
+            let resultTelefone = await controller_telefone.buscarTelefoneIdProdutora(produtora.id)
+            if(resultTelefone.status){
+                produtora.telefone = resultTelefone.response.telefone
+            }
+
             message.DEFAULT_MESSAGE.status      = message.SUCCESS_CREATED_ITEM.status
             message.DEFAULT_MESSAGE.status_code = message.SUCCESS_CREATED_ITEM.status_code
             message.DEFAULT_MESSAGE.message     = message.SUCCESS_CREATED_ITEM.message
@@ -51,7 +78,7 @@ const inserirNovaProdutora = async function(produtora, contentType){
     }
 }
 
-//Função para atualizar um filme
+//Função para atualizar a produtora
 const atualizarProdutora = async function(produtora, id, contentType){
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -62,9 +89,8 @@ const atualizarProdutora = async function(produtora, id, contentType){
             //Validação para o id incorreto
             let resultBuscarID = await buscarProdutora(id)
 
-            //o retorno da função poderá ser um 400 ou 404 ou até mesmo um 500
             if(resultBuscarID.status){
-                let validar = await validarDados(produtora, contentType)
+                let validar = await validarDados(produtora)
 
                 //Validação de campos obrigatórios para atualização (Body)
                 if(!validar){
@@ -74,6 +100,33 @@ const atualizarProdutora = async function(produtora, id, contentType){
                     let result = await produtoraDAO.updateProdutora(produtora)
 
                     if(result){
+
+                        //TELEFONE
+                        //Exclui todos os telefones relacionados com a produtora para reinserir
+                        await controller_telefone.excluirTelefoneProdutora(produtora.id)
+
+                        if (produtora.telefone && produtora.telefone.length > 0) {
+                            for (let telefone of produtora.telefone) {
+                                let produtoraTelefone = {
+                                    "id_tipo_telefone": telefone.id,
+                                    "id_produtora":     produtora.id,
+                                    "numero":           telefone.numero
+                                }
+                                //CORREÇÃO: chama controller_telefone, não controller_filme_pessoa
+                                let resultInsertTelefone = await controller_telefone.inserirNovoTelefone(produtoraTelefone, contentType)
+                                console.log(resultInsertTelefone)
+                                if(!resultInsertTelefone.status){
+                                    return message.SUCCESS_CREATED_WARNING
+                                }
+                            }
+                        }
+
+                        //BUSCANDO TELEFONE PARA RETORNAR NA RESPONSE
+                        let resultTelefone = await controller_telefone.buscarTelefoneIdProdutora(produtora.id)
+                        if(resultTelefone.status){
+                            produtora.telefone = resultTelefone.response.telefone
+                        }
+
                         message.DEFAULT_MESSAGE.status      = message.SUCESS_UPDATED_ITEM.status
                         message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
                         message.DEFAULT_MESSAGE.message     = message.SUCESS_UPDATED_ITEM.message
@@ -93,12 +146,10 @@ const atualizarProdutora = async function(produtora, id, contentType){
         }
     }catch (error){
         return message.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (Controller)
-
-
     }
-    
 }
 
+//Função para retornar todas as produtoras
 const listarProdutora = async function(){
 
     //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
@@ -112,6 +163,16 @@ const listarProdutora = async function(){
         if(result){
             //Validação para verificar se existe conteúdo no array
             if(result.length > 0 ){
+
+                //CORREÇÃO: bloco de telefone dentro do loop, usando a variável correta (produtora)
+                for(let produtora of result){
+                    //TELEFONE
+                    let resultTelefone = await controller_telefone.buscarTelefoneIdProdutora(produtora.id)
+                    if(resultTelefone.status){
+                        produtora.telefone = resultTelefone.response.telefone
+                    }
+                }
+
                 message.DEFAULT_MESSAGE.status         = message.SUCESS_RESPONSE.status
                 message.DEFAULT_MESSAGE.status_code    = message.SUCESS_RESPONSE.status_code
                 message.DEFAULT_MESSAGE.response.count = result.length
@@ -128,6 +189,7 @@ const listarProdutora = async function(){
     }
 }
 
+//Função para buscar uma produtora pelo id
 const buscarProdutora = async function(id){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
@@ -142,6 +204,13 @@ const buscarProdutora = async function(id){
 
             if(result){
                 if(result.length > 0){
+
+                    //CORREÇÃO: usando 'id' (parâmetro da função) para buscar os telefones
+                    let resultTelefone = await controller_telefone.buscarTelefoneIdProdutora(id)
+                    if(resultTelefone.status){
+                        result[0].telefone = resultTelefone.response.telefone
+                    }
+
                     message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                     message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
                     message.DEFAULT_MESSAGE.response.produtora  = result
@@ -158,6 +227,7 @@ const buscarProdutora = async function(id){
         }
 }
 
+//Função para excluir uma produtora
 const excluirProdutora = async function(id){
     let message = JSON.parse(JSON.stringify(config_message))
 
@@ -166,6 +236,9 @@ const excluirProdutora = async function(id){
         let resultBuscarID = await buscarProdutora(id)
 
         if(resultBuscarID.status){
+
+            //CORREÇÃO: nome correto da função exportada pelo controller_telefone
+            await controller_telefone.excluirTelefoneProdutora(id)
 
             let result = await produtoraDAO.deleteByIdProdutora(id)
 
@@ -183,6 +256,7 @@ const excluirProdutora = async function(id){
     }
 }
 
+//Função para validar todos os dados da produtora
 const validarDados = async function(produtora){
      //Criando clone do objeto JSON para manipular a estrutura local sem modificar a estrutura original
     let message = JSON.parse(JSON.stringify(config_message))
@@ -207,6 +281,9 @@ const validarDados = async function(produtora){
         return message.ERROR_BAD_REQUEST
     }else if(produtora.email == undefined || produtora.email == '' || produtora.email == null || produtora.email.length > 255){
         message.ERROR_BAD_REQUEST.field = '[EMAIL] INVÁLIDO'
+        return message.ERROR_BAD_REQUEST
+    }else if(produtora.telefone == undefined || produtora.telefone == null || !Array.isArray(produtora.telefone)){
+        message.ERROR_BAD_REQUEST.field = '[TELEFONE] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else{
         return false

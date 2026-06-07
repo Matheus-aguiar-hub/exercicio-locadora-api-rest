@@ -186,13 +186,14 @@ const buscarGeneroIdFilme = async function(idFilme){
                if(result.length > 0){
                    message.DEFAULT_MESSAGE.status          = message.SUCESS_RESPONSE.status
                    message.DEFAULT_MESSAGE.status_code     = message.SUCESS_RESPONSE.status_code
-                   message.DEFAULT_MESSAGE.response.filme_genero = result[0]
-
+                   message.DEFAULT_MESSAGE.response.filme_genero = result
                    return message.DEFAULT_MESSAGE //200
                }else{
                    return message.ERROR_NOT_FOUND //404
                }
-           }else result = message.ERROR_INTERNAL_SERVER_MODEL // 500 (model)
+           }else {
+               return message.ERROR_INTERNAL_SERVER_MODEL // 500 (model)
+           }
        }
 
        } catch (error) {

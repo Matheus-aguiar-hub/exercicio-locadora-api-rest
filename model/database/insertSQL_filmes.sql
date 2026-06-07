@@ -10,7 +10,12 @@ select * from tbl_produtora;
 select * from tbl_filme_genero;
 select * from tbl_filme_idioma;
 select * from tbl_filmes;
+select * from tbl_pessoa;
+select * from tbl_filme_pessoa;
 
+SELECT * FROM tbl_filme_genero WHERE id_filme = id;
+SELECT * FROM tbl_filme_idioma WHERE id_filme = id;
+SELECT * FROM tbl_filme_pessoa WHERE id_filme = id;
 -- --------------------------------
 -- 			TABELA GÊNERO
 -- --------------------------------
@@ -104,30 +109,59 @@ insert into tbl_classificacao_indicativa(nome,
 -- -------------------------------------------------
 -- 				TABELA DE IDIOMA
 -- -------------------------------------------------
-insert into tbl_idioma (
-						nome,
-                        sigla
-						)
-						values(
-						'Português',
-						'PT-BR'
-						),
-						(
-						'Inglês',
-						'EN'
-						),
-						(
-						'Espanhol',
-						'ES'
-						),
-						(
-						'Francês',
-						'FR'
-						),
-						(
-						'Alemão',
-						'DE'
-						);
+insert into tbl_filme_idioma(tipo,
+							id_idioma,
+							id_filme
+							)values(
+								'Original',
+								2,
+								1
+								),
+								(
+								'Dublado',
+								1,
+								1
+								),
+								(
+								'Original',
+								1,
+								2
+								),
+								(
+								'Legendado',
+								3,
+								2
+								),
+								(
+								'Original',
+								1,
+								3
+								),
+								(
+								'Dublado',
+								2,
+								3
+								),
+								(
+								'Original',
+								4,
+								4
+								),
+								(
+								'Dublado',
+								1,
+								4
+								),
+								(
+								'Original',
+								2,
+								5
+								),
+								(
+								'Legendado',
+								1,
+								5
+								);
 
 -- -------------------------------------------------
 -- 				TABELA SEXO
@@ -413,4 +447,162 @@ values(
 		(
 		'Original',
 		4
+		);
+        
+insert into tbl_pessoa
+(
+	nome,
+	data_nascimento,
+	foto,
+	id_nacionalidade,
+	id_sexo
+)
+values(
+		'Robert Downey Jr.',
+		'1965-04-04',
+		'https://exemplo.com/fotos/robert_downey_jr.jpg',
+		2,
+		1
+		),
+		(
+		'Scarlett Johansson',
+		'1984-11-22',
+		'https://exemplo.com/fotos/scarlett_johansson.jpg',
+		2,
+		2
+		),
+		(
+		'Keanu Reeves',
+		'1964-09-02',
+		'https://exemplo.com/fotos/keanu_reeves.jpg',
+		3,
+		1
+		),
+		(
+		'Emma Watson',
+		'1990-04-15',
+		'https://exemplo.com/fotos/emma_watson.jpg',
+		4,
+		2
+		),
+		(
+		'Tom Holland',
+		'1996-06-01',
+		'https://exemplo.com/fotos/tom_holland.jpg',
+		4,
+		1
+		);
+
+insert into tbl_filme_pessoa
+(
+	funcao,
+	id_filme,
+	id_pessoa
+)
+values(
+		'Ator',
+		1,
+		1
+		),
+		(
+		'Diretor',
+		1,
+		2
+		),
+		(
+		'Roteirista',
+		1,
+		3
+		),
+		(
+		'Ator',
+		2,
+		4
+		),
+		(
+		'Diretor',
+		2,
+		5
+		),
+		(
+		'Ator',
+		3,
+		2
+		),
+		(
+		'Dublador',
+		3,
+		1
+		),
+		(
+		'Diretor',
+		4,
+		3
+		),
+		(
+		'Ator',
+		5,
+		5
+		),
+		(
+		'Roteirista',
+		5,
+		4
+		);
+        
+insert into tbl_telefone
+(
+	numero,
+	id_tipo_telefone,
+	id_produtora
+)
+values(
+		'(11) 4002-8922',
+		1,
+		1
+		),
+		(
+		'(11) 99876-1234',
+		3,
+		1
+		),
+		(
+		'(21) 3333-4444',
+		1,
+		2
+		),
+		(
+		'(21) 98765-4321',
+		3,
+		2
+		),
+		(
+		'(31) 3555-6677',
+		2,
+		3
+		),
+		(
+		'(31) 99999-8888',
+		3,
+		3
+		),
+		(
+		'(41) 3222-1111',
+		4,
+		4
+		),
+		(
+		'(41) 98888-7777',
+		3,
+		4
+		),
+		(
+		'(51) 3444-5555',
+		1,
+		5
+		),
+		(
+		'(51) 97777-6666',
+		3,
+		5
 		);

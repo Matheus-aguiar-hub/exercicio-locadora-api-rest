@@ -24,6 +24,8 @@ desc tbl_produtora;
 #TABELA INTERMEDIA / CHAVE ESTRANGEIRA
 desc tbl_filme_genero;
 desc tbl_filme_idioma;
+desc tbl_pessoa;
+desc tbl_filme_pessoa;
 
 -- ------------------------------------------------------------------------
 -- 						TABELAS SEM CHAVE ESTRANGEIRA
@@ -103,7 +105,25 @@ alter table tbl_filmes
             add constraint FK_PRODUTORA_FILME
 				foreign key (id_produtora)
                 references tbl_produtora(id);
+                
 
+create table tbl_pessoa (id 				int not null primary key auto_increment,
+                        nome 				varchar(100) not null,
+                        data_nascimento 	date not null,
+                        foto 				varchar (255),
+                        id_nacionalidade 	int not null,
+                        id_sexo 			int not null,
+                        
+						#Relação para nacionalidade
+						constraint		FK_NACIONALIDADE_PESSOANACIONALIDADE
+						foreign key 	(id_nacionalidade)
+						references 		tbl_nacionalidade(id),
+                                
+						#Relação para o sexo
+						constraint 		FK_SEXO_PESSOASEXO
+						foreign key 	(id_sexo)
+						references  	tbl_sexo(id)                        
+						);
 
 -- ------------------------------------------------------------------------------------------------------------
 
@@ -127,12 +147,50 @@ create table tbl_filme_genero (	id 			int not null auto_increment primary key,
 create table tbl_filme_idioma (	id int not null auto_increment primary key,
 								tipo varchar(100) not null,
 								id_idioma int not null,
+                                id_filme int not null,
+                                
+                                #Relação para o Filme
+                                constraint		FK_FILME_FILMEIDIOMA
+                                foreign key 	(id_filme)
+                                references 		tbl_filmes(id),
                                 
                                 #Relação com idioma
                                 constraint 		FK_IDIOMA_FILMEIDIOMA
 								foreign key 	(id_idioma)
                                 references  	tbl_idioma(id)
                                 );
+                                
+create table tbl_filme_pessoa (	id int not null auto_increment primary key,
+							funcao varchar(30) not null,
+							id_filme int not null,
+                            id_pessoa int not null,
+                            
+							#Relação para o Filme
+							constraint		FK_FILME_FILMEPESSOA
+							foreign key 	(id_filme)
+							references 		tbl_filmes(id),
+                                
+							#Relação com pessoa
+							constraint 		FK_PESSOA_FILMEPESSOA
+							foreign key 	(id_pessoa)
+							references  	tbl_pessoa(id)
+                            );
+
+create table tbl_telefone (id int not null auto_increment primary key,
+							numero varchar(25) not null,
+                            id_tipo_telefone int not null,
+                            id_produtora int not null,
+                            
+							#Relação para o Filme
+							constraint		FK_TIPOTELEFONE_TELEFONE
+							foreign key 	(id_tipo_telefone)
+							references 		tbl_tipo_telefone(id),
+                                
+							#Relação com pessoa
+							constraint 		FK_PRODUTORA_TELEFONE
+							foreign key 	(id_produtora)
+							references  	tbl_produtora(id)
+							);
 
 -- -------------------------------------------------------------------------------------------------------
 

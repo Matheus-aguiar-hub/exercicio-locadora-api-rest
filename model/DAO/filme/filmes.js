@@ -26,7 +26,10 @@ const insertFilme = async function(filmes){
                         avaliacao, 
                         valor, 
                         capa,
-                        id_classificacao_indicativa
+                        trailer_url,
+                        status_filme,
+                        id_classificacao_indicativa,
+                        id_produtora
                         )
 				values(
 						'${filmes.nome}',
@@ -36,7 +39,10 @@ const insertFilme = async function(filmes){
                         if('${filmes.avaliacao}' = '', null, '${filmes.avaliacao}'),
                         '${filmes.valor}',
                         '${filmes.capa}',
-                        ${filmes.id_classificacao_indicativa}
+                        if('${filmes.trailer_url}' = '', null, '${filmes.trailer_url}'),
+                        if('${filmes.status_filme}' = '', null, '${filmes.status_filme}'),
+                        ${filmes.id_classificacao_indicativa},
+                        ${filmes.id_produtora}
                         );`
 
     //Executar o scriptSQL no banco de dados
@@ -46,7 +52,6 @@ const insertFilme = async function(filmes){
     else return false
     
     }catch(error){
-        console.log(error)
         return false
     }
 }
@@ -63,7 +68,10 @@ const updateFilme = async function(filmes){
                             avaliacao                   = if('${filmes.avaliacao}' = '', null, '${filmes.avaliacao}'),
                             valor                       = '${filmes.valor}',
                             capa                        = '${filmes.capa}',
-                            id_classificacao_indicativa = ${filmes.id_classificacao_indicativa}
+                            trailer_url                 = if('${filmes.trailer_url}' = '', null, '${filmes.trailer_url}'),
+                            status_filme                = if('${filmes.status_filme}' = '', null, '${filmes.status_filme}'),
+                            id_classificacao_indicativa = ${filmes.id_classificacao_indicativa},
+                            id_produtora                = ${filmes.id_produtora}
                         where id = ${filmes.id}`
               
             // Executa o script SQL no BD
