@@ -1,13 +1,13 @@
 module.exports = {
     development: {
-      // ⚠️ ALTERAÇÃO: Define o cliente como 'mysql2'
+      // ALTERAÇÃO: Define o cliente como 'mysql2'
       client: 'mysql2',
       connection: {
-        host: 'localhost', // aonde está instalado o mysql
-        user: 'root', // Substitua pelo seu usuário
-        password: 'bcd127', // Substitua pela sua senha
-        database: 'db_filmes_20261_a',
-        port: 3306, // Porta padrão do MySQL
+        host:     process.env.DB_HOST, // aonde está instalado o mysql
+        user:     process.env.DB_USER, // Substitua pelo seu usuário
+        password: process.env.DB_PASSWORD, // Substitua pela sua senha
+        database: process.env.DB_NAME, // Substitua pelo nome do seu banco de dados
+        port:     process.env.DB_PORT || 3306, // Porta padrão do MySQL
        
         // Opcional: Define charset (recomendado para UTF8)
         charset: 'utf8mb4'

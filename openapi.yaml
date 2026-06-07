@@ -7,7 +7,7 @@ info:
   version: 1.0.4.26
 
 servers:
-  - url: http://localhost:8080
+  - url: https://api-restful-locadora.onrender.com
 
 paths:
 
@@ -494,7 +494,7 @@ paths:
         '201':
           description: Tipo telefone criado
 
-  /v1/senai/tipo-telefone/{id}:
+  /v1/senai/locadora/tipo-telefone/{id}:
     get:
       tags:
         - TIPO_TELEFONE
@@ -631,23 +631,26 @@ components:
         nome:
           type: string
         data_lancamento:
-          type: date  
+          type: string
+          format: date
         duracao:
-          type: time
+          type: string
+          example: "02:30:00"
         sinopse:
-          type: text
+          type: string
         avaliacao:
-          type: number
+          type: integer
         valor:
-          type: number
+          type: integer
         capa:
           type: string
         trailer_url:
-          type: string
+            type: string
+            format: uri
         status_filme:
           type: string
         id_classificacao_indicativa:
-          type: number
+          type: integer
 
     Classificacao:
       type: object
@@ -655,7 +658,7 @@ components:
         nome:
           type: string
         descricao:
-          type: text
+          type: string
         sigla:
           type: string
         idade_minima:
@@ -667,7 +670,7 @@ components:
         tipo:
           type: string
         descricao:
-          type: text
+          type: string
 
     Idioma:
       type: object
@@ -707,10 +710,12 @@ components:
         razao_social:
           type: string
         website:
-          type: string
+            type: string
+            format: uri
         data_inicio:
           type: date
         status_produtora:
           type: string
         email:
           type: string
+          format: email

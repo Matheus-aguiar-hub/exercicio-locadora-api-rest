@@ -2,6 +2,10 @@ const express       = require('express')
 const cors          = require('cors')
 const bodyParser    = require('body-parser')
 
+//Fazendo com que o swagger leia o arquivo YAML para gerar a documentação em web
+const swaggerUi = require('swagger-ui-express')
+const YAML = require('yamljs')
+
 //Import das CONTROLLERS do projeto
 
 const    controllerGenero          = require('./controller/genero/controller_genero.js')
@@ -18,6 +22,9 @@ const bodyParserJSON = bodyParser.json()
 
 const app = express()
 
+//Carregando o arquivo YAML para o swagger
+const swaggerDocument = YAML.load('./swagger.yaml')
+
 const corsOptions = {
     origin: ['*'],
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
@@ -25,6 +32,13 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+
+//Configuração do Swagger para acessar a documentação da API
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+)
 
 //ENDPOINTS
 

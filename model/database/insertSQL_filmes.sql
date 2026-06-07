@@ -1,21 +1,5 @@
 use db_filmes_20261_a;
 
-select * from tbl_genero;
-select * from tbl_classificacao_indicativa;
-select * from tbl_idioma;
-select * from tbl_sexo;
-select * from tbl_nacionalidade;
-select * from tbl_tipo_telefone;
-select * from tbl_produtora;
-select * from tbl_filme_genero;
-select * from tbl_filme_idioma;
-select * from tbl_filmes;
-select * from tbl_pessoa;
-select * from tbl_filme_pessoa;
-
-SELECT * FROM tbl_filme_genero WHERE id_filme = id;
-SELECT * FROM tbl_filme_idioma WHERE id_filme = id;
-SELECT * FROM tbl_filme_pessoa WHERE id_filme = id;
 -- --------------------------------
 -- 			TABELA GÊNERO
 -- --------------------------------
@@ -104,64 +88,6 @@ insert into tbl_classificacao_indicativa(nome,
 											'18',
 											18
 											);
-                                            
-  
--- -------------------------------------------------
--- 				TABELA DE IDIOMA
--- -------------------------------------------------
-insert into tbl_filme_idioma(tipo,
-							id_idioma,
-							id_filme
-							)values(
-								'Original',
-								2,
-								1
-								),
-								(
-								'Dublado',
-								1,
-								1
-								),
-								(
-								'Original',
-								1,
-								2
-								),
-								(
-								'Legendado',
-								3,
-								2
-								),
-								(
-								'Original',
-								1,
-								3
-								),
-								(
-								'Dublado',
-								2,
-								3
-								),
-								(
-								'Original',
-								4,
-								4
-								),
-								(
-								'Dublado',
-								1,
-								4
-								),
-								(
-								'Original',
-								2,
-								5
-								),
-								(
-								'Legendado',
-								1,
-								5
-								);
 
 -- -------------------------------------------------
 -- 				TABELA SEXO
@@ -293,7 +219,7 @@ insert into tbl_produtora(
 						'Ativa',
 						'contato@sunrisemotion.com'
 						);
-                        
+
 -- -------------------------------------------------
 -- 				TABELA FILMES
 -- -------------------------------------------------                        
@@ -377,6 +303,58 @@ values(
 		5
 		);
 
+-- -------------------------------------------------
+-- 				TABELA PESSOA
+-- -------------------------------------------------
+
+insert into tbl_pessoa
+(
+	nome,
+	data_nascimento,
+	foto,
+	id_nacionalidade,
+	id_sexo
+)
+values(
+		'Robert Downey Jr.',
+		'1965-04-04',
+		'https://exemplo.com/fotos/robert_downey_jr.jpg',
+		2,
+		1
+		),
+		(
+		'Scarlett Johansson',
+		'1984-11-22',
+		'https://exemplo.com/fotos/scarlett_johansson.jpg',
+		2,
+		2
+		),
+		(
+		'Keanu Reeves',
+		'1964-09-02',
+		'https://exemplo.com/fotos/keanu_reeves.jpg',
+		3,
+		1
+		),
+		(
+		'Emma Watson',
+		'1990-04-15',
+		'https://exemplo.com/fotos/emma_watson.jpg',
+		4,
+		2
+		),
+		(
+		'Tom Holland',
+		'1996-06-01',
+		'https://exemplo.com/fotos/tom_holland.jpg',
+		4,
+		1
+		);
+
+-- -------------------------------------------------
+-- 			TABELA INTERMEDIARIA FILME_GENERO
+-- -------------------------------------------------
+
 insert into tbl_filme_genero
 (
 	id_filme,
@@ -423,75 +401,70 @@ values(
 		2
 		);
 
+-- -------------------------------------------------
+-- 			TABELA INTERMEDIARIA FILME_IDIOMA
+-- -------------------------------------------------
+
 insert into tbl_filme_idioma
 (
 	tipo,
-	id_idioma
+	id_idioma,
+	id_filme
 )
 values(
 		'Original',
-		2
-		),
-		(
-		'Dublado',
+		2,
 		1
 		),
 		(
+		'Dublado',
+		1,
+		1
+		),
+		(
+		'Original',
+		1,
+		2
+		),
+		(
 		'Legendado',
+		3,
+		2
+		),
+		(
+		'Original',
+		1,
 		3
 		),
 		(
 		'Dublado',
-		5
+		2,
+		3
 		),
 		(
 		'Original',
+		4,
 		4
-		);
-        
-insert into tbl_pessoa
-(
-	nome,
-	data_nascimento,
-	foto,
-	id_nacionalidade,
-	id_sexo
-)
-values(
-		'Robert Downey Jr.',
-		'1965-04-04',
-		'https://exemplo.com/fotos/robert_downey_jr.jpg',
+		),
+		(
+		'Dublado',
+		1,
+		4
+		),
+		(
+		'Original',
 		2,
-		1
+		5
 		),
 		(
-		'Scarlett Johansson',
-		'1984-11-22',
-		'https://exemplo.com/fotos/scarlett_johansson.jpg',
-		2,
-		2
-		),
-		(
-		'Keanu Reeves',
-		'1964-09-02',
-		'https://exemplo.com/fotos/keanu_reeves.jpg',
-		3,
-		1
-		),
-		(
-		'Emma Watson',
-		'1990-04-15',
-		'https://exemplo.com/fotos/emma_watson.jpg',
-		4,
-		2
-		),
-		(
-		'Tom Holland',
-		'1996-06-01',
-		'https://exemplo.com/fotos/tom_holland.jpg',
-		4,
-		1
+		'Legendado',
+		1,
+		5
 		);
+
+-- -------------------------------------------------
+-- 			TABELA INTERMEDIARIA FILME_PESSOA
+-- -------------------------------------------------
 
 insert into tbl_filme_pessoa
 (
@@ -549,6 +522,10 @@ values(
 		5,
 		4
 		);
+
+-- -------------------------------------------------
+-- 				TABELA TELEFONE
+-- -------------------------------------------------
         
 insert into tbl_telefone
 (

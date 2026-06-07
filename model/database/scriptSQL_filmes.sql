@@ -1,31 +1,8 @@
 #Cria o database do projeto de filmes
-create database db_filmes_20261_a;
+create database if not exists db_filmes_20261_a;
 
 #Ativa o uso do database de filmes
 use db_filmes_20261_a;
-
-#Alteração das tabelas
-alter table tbl_filmes add status varchar(15);
-show tables;
-
-#TABELA PRINCIPAL
-desc tbl_filmes;
-
-#TABELA SEM CHAVE PRIMARIA
-desc tbl_genero;
-desc tbl_classificacao_indicativa;
-desc tbl_idioma;
-desc tbl_sexo;
-desc tbl_nacionalidade;
-desc tbl_tipo_telefone;
-desc tbl_produtora;
-
-
-#TABELA INTERMEDIA / CHAVE ESTRANGEIRA
-desc tbl_filme_genero;
-desc tbl_filme_idioma;
-desc tbl_pessoa;
-desc tbl_filme_pessoa;
 
 -- ------------------------------------------------------------------------
 -- 						TABELAS SEM CHAVE ESTRANGEIRA
@@ -37,7 +14,7 @@ create table tbl_genero(
 						descricao		text not null
 						);
 
-create table tbl_classificacao(
+create table tbl_classificacao_indicativa(
 										id 				int not null primary key auto_increment,
 										nome 			varchar(50) not null,
 										descricao		text not null,
@@ -192,9 +169,3 @@ create table tbl_telefone (id int not null auto_increment primary key,
 							references  	tbl_produtora(id)
 							);
 
--- -------------------------------------------------------------------------------------------------------
-
---  ------------------------------ INNER JOIN'S -----------------------------------------------------
-
-
--- ------------------------------------------------------------------------------------------------------------
