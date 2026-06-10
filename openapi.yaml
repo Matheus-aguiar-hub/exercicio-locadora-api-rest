@@ -11,7 +11,7 @@ info:
     name: MIT
 
 servers:
-  - url: https://api-restful-locadora.onrender.com/v1/senai/locadora/filme
+  - url: https://api-restful-locadora.onrender.com
     description: Ambiente de Produção
   - url: http://localhost:8080
     description: Ambiente Local
