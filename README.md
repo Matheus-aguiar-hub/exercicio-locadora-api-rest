@@ -226,7 +226,7 @@ Todas as respostas seguem a estrutura:
 ## Documentação
 
 A documentação completa dos endpoints está disponível no arquivo `doc/openapi.yaml`.  
-Para visualizar: acesse [editor.swagger.io]([https://editor.swagger.io](https://api-restful-locadora.onrender.com/api-docs/)).
+Para visualizar: acesse o [Render](https://api-restful-locadora.onrender.com/api-docs).
 
 ---
 
