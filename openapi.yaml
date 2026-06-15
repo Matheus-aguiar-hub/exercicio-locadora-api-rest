@@ -1245,3 +1245,7 @@ components:
         id_nacionalidade:
           type: integer
           example: 1
+
+    externalDocs:
+        description: exercicio-locadora-api-rest
+        url: https://github.com/Matheus-aguiar-hub/exercicio-locadora-api-rest
