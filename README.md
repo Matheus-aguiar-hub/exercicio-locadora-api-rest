@@ -19,6 +19,16 @@ API RESTful desenvolvida em Node.js com arquitetura MVC para gerenciamento de um
 ```
 senai-locadora-api-full/
 ├── app.js
+├── routes/
+│   ├── filme.routes.js
+│   ├── genero.routes.js
+│   ├── idioma.routes.js
+│   ├── classificacao_indicativa.routes.js
+│   ├── produtora.routes.js
+│   ├── pessoa.routes.js
+│   ├── sexo.routes.js
+│   ├── nacionalidade.routes.js
+│   └── tipo_telefone.routes.js
 ├── controller/
 │   ├── filme/
 │   │   ├── controller_filme.js
@@ -39,6 +49,8 @@ senai-locadora-api-full/
 │   │   └── controller_telefone.js
 │   ├── nacionalidade/
 │   │   └── controller_nacionalidade.js
+│   ├── pessoa/
+│   │   └── controller_pessoa.js
 │   └── sexo/
 │       └── controller_sexo.js
 ├── model/
@@ -199,6 +211,8 @@ Todas as respostas seguem a estrutura:
 
 ## Decisões de Arquitetura
 
+**Camada de rotas (routes/):** cada recurso possui seu próprio arquivo de rotas, desacoplando a definição dos endpoints da configuração do servidor. O `app.js` atua apenas como ponto de entrada, registrando as rotas via `app.use()`.
+
 **MVC com DAO:** controllers concentram validação e regras de negócio; DAOs isolam o SQL. Mudança de banco afeta apenas a camada DAO.
 
 **Relações tratadas no controller:** ao inserir/atualizar um filme, o controller orquestra os inserts nas tabelas intermediárias (`tbl_filme_genero`, `tbl_filme_idioma`, `tbl_filme_pessoa`) de forma serial com `async/await`, garantindo consistência sem transações explícitas.
@@ -212,7 +226,7 @@ Todas as respostas seguem a estrutura:
 ## Documentação
 
 A documentação completa dos endpoints está disponível no arquivo `doc/openapi.yaml`.  
-Para visualizar: acesse [editor.swagger.io](https://editor.swagger.io) e importe o arquivo.
+Para visualizar: acesse o [Render](https://api-restful-locadora.onrender.com/api-docs).
 
 ---
 
