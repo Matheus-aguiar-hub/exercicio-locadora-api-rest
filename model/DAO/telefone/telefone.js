@@ -34,7 +34,7 @@ const insertTelefone = async function(telefone){
         else return false
         
         }catch(error){
-        console.log(error)
+        // console.log(error)
             return false
         }
 }

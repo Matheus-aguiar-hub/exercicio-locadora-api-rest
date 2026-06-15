@@ -1,27 +1,32 @@
+//Dependências
 const express       = require('express')
 const cors          = require('cors')
-const bodyParser    = require('body-parser')
 
 //Fazendo com que o swagger leia o arquivo YAML para gerar a documentação em web
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
 
-//Criando um objeto para manipular dados do body da API em formato JSON
-const bodyParserJSON = bodyParser.json()
-
+//Configurando
+//Cria a aplicação Express
 const app = express()
 
 //Carregando o arquivo YAML para o swagger
 const swaggerDocument = YAML.load('./openapi.yaml')
 
+//Configurando o cors
 const corsOptions = {
     origin: ['*'],
     methods: 'GET, POST, PUT, DELETE, OPTIONS',
-    allowedHeaders: ['Content-type', 'Autorization']
+    allowedHeaders: ['Content-Type', 'Authorization']
 }
 
+//middleWares
+//Cors
 app.use(cors(corsOptions))
+//Middleware para receber JSON
+app.use(express.json())
 
+//Swagger
 //Configuração do Swagger para acessar a documentação da API
 app.use(
     '/api-docs',
@@ -38,10 +43,10 @@ const nacionalidadeRoutes           = require('./routes/nacionalidade.routes.js'
 const pessoaRoutes                  = require('./routes/pessoa.routes.js')
 const produtoraRoutes               = require('./routes/produtora.routes.js')
 const sexoRoutes                    = require('./routes/sexo.routes.js')
-const telefoneRoutes                = require('./routes/tipo_telefone.routes.js')
+const tipoTelefoneRoutes            = require('./routes/tipo_telefone.routes.js')
 
 //Importação dos endpoints com o use
-app.use('/v1/senai/locadora/classificacao', classificacaoRoutes)
+app.use('/v1/senai/locadora/classificacao-indicativa', classificacaoRoutes)
 app.use('/v1/senai/locadora/filme', filmeRoutes)
 app.use('/v1/senai/locadora/genero', generoRoutes)
 app.use('/v1/senai/locadora/idioma', idiomaRoutes)
@@ -49,9 +54,9 @@ app.use('/v1/senai/locadora/nacionalidade', nacionalidadeRoutes)
 app.use('/v1/senai/locadora/pessoa', pessoaRoutes)
 app.use('/v1/senai/locadora/produtora', produtoraRoutes)
 app.use('/v1/senai/locadora/sexo', sexoRoutes)
-app.use('/v1/senai/locadora/tipo-telefone', telefoneRoutes)
+app.use('/v1/senai/locadora/tipo-telefone', tipoTelefoneRoutes)
 
-//Seve para inicializar a API para receber requisições
+//Serve para inicializar a API e receber requisições
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, function(){

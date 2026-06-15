@@ -1,66 +1,69 @@
+//Dependências
 const express           = require('express')
 const router            = express.Router()
-const bodyParserJSON    = require('body-parser')
 
-const controllerSexo  =  require('../controller/sexo/controller_sexo.js')
- 
-// Endpoint para inserir tipo telefone
-router.post('/', bodyParserJSON, async function(request, response){
+//Importando arquivo sexo da controller
+const controllerSexo = require('../controller/sexo/controller_sexo.js')
 
-    let dados = request.body
+// Endpoint para inserir sexo
+router.post('/', async function(request, response){
 
-    let contentType = request.headers['content-type']
+    const dados = request.body
 
-    let result = await controllerSexo.inserirNovoSexo(dados, contentType)
+    const contentType = request.headers['content-type']
 
-    response.status(result.status_code)
-    response.json(result)
+    const result = await controllerSexo.inserirNovoSexo(
+        dados,
+        contentType
+    )
+
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para listar tipos de telefone
+// Endpoint para listar sexos
 router.get('/', async function(request, response){
 
-    let result = await controllerSexo.listarSexo()
+    const result = await controllerSexo.listarSexo()
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para buscar tipo telefone pelo ID
+// Endpoint para buscar sexo pelo ID
 router.get('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerSexo.buscarSexo(id)
+    const result = await controllerSexo.buscarSexo(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para atualizar tipo telefone
-router.put('/:id', bodyParserJSON, async function(request, response){
+// Endpoint para atualizar sexo
+router.put('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerSexo.atualizarSexo(dados, id, contentType)
+    const result = await controllerSexo.atualizarSexo(
+        dados,
+        id,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para deletar tipo telefone
+// Endpoint para deletar sexo
 router.delete('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerSexo.excluirSexo(id)
+    const result = await controllerSexo.excluirSexo(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-module.exports = router 
+module.exports = router

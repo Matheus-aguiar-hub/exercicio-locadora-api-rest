@@ -114,7 +114,7 @@ const atualizarProdutora = async function(produtora, id, contentType){
                                 }
                                 //CORREÇÃO: chama controller_telefone, não controller_filme_pessoa
                                 let resultInsertTelefone = await controller_telefone.inserirNovoTelefone(produtoraTelefone, contentType)
-                                console.log(resultInsertTelefone)
+                                // console.log(resultInsertTelefone)
                                 if(!resultInsertTelefone.status){
                                     return message.SUCCESS_CREATED_WARNING
                                 }

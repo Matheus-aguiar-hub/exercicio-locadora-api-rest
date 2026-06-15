@@ -45,7 +45,7 @@ const inserirNovaPessoa = async function(pessoa, contentType){
         return message.ERROR_CONTENT_TYPE // 415    
     }
     }catch (error){
-        console.log(error)
+        // console.log(error)
         return message.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (controller)
     }
 }

@@ -1,18 +1,5 @@
 use db_filmes_20261_a;
 
-select * from tbl_genero;
-select * from tbl_classificacao_indicativa;
-select * from tbl_idioma;
-select * from tbl_sexo;
-select * from tbl_nacionalidade;
-select * from tbl_tipo_telefone;
-select * from tbl_produtora;
-select * from tbl_pessoa;
-select * from tbl_filme_genero;
-select * from tbl_filme_idioma;
-select * from tbl_filme_pessoa;
-select * from tbl_telefone;
-
 -- --------------------------------
 -- 			TABELA GÊNERO
 -- --------------------------------
@@ -596,3 +583,17 @@ values(
 		3,
 		5
 		);
+
+
+select * from tbl_genero;
+select * from tbl_classificacao_indicativa;
+select * from tbl_idioma;
+select * from tbl_sexo;
+select * from tbl_nacionalidade;
+select * from tbl_tipo_telefone;
+select * from tbl_produtora;
+select * from tbl_pessoa;
+select * from tbl_filme_genero;
+select * from tbl_filme_idioma;
+select * from tbl_filme_pessoa;
+select * from tbl_telefone;

@@ -1,68 +1,70 @@
+//Dependências
 const express           = require('express')
 const router            = express.Router()
-const bodyParserJSON    = require('body-parser')
 
-//Importando arquivo produto da controller
+//Importando arquivo classificação da controller
 const controllerClassificacao = require('../controller/classificacao_indicativa/controller_classificacao.js')
 
 // Endpoint para inserir classificação
-router.post('/', bodyParserJSON, async function(request, response){
+router.post('/', async function(request, response){
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerClassificacao.inserirNovaClassificacao(dados, contentType)
+    const result = await controllerClassificacao.inserirNovaClassificacao(
+        dados,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para listar classificações
 router.get('/', async function(request, response){
 
-    let result = await controllerClassificacao.listarClassificacao()
+    const result = await controllerClassificacao.listarClassificacao()
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para buscar classificação pelo ID
 router.get('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerClassificacao.buscarClassificacao(id)
+    const result = await controllerClassificacao.buscarClassificacao(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para atualizar classificação
-router.put('/:id', bodyParserJSON, async function(request, response){
+router.put('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerClassificacao.atualizarClassificacao(dados, id, contentType)
+    const result = await controllerClassificacao.atualizarClassificacao(
+        dados,
+        id,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 
 // Endpoint para deletar classificação
 router.delete('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerClassificacao.excluirClassificacao(id)
+    const result = await controllerClassificacao.excluirClassificacao(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 module.exports = router 

@@ -1,66 +1,69 @@
+//Dependências
 const express           = require('express')
 const router            = express.Router()
-const bodyParserJSON    = require('body-parser')
 
-const controllerIdioma  =  require('../controller/idioma/controller_idioma.js')
+//Importando arquivo idioma da controller
+const controllerIdioma = require('../controller/idioma/controller_idioma.js')
 
 // Endpoint para inserir idioma
-router.post('/', bodyParserJSON, async function(request, response){
+router.post('/', async function(request, response){
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerIdioma.inserirNovoIdioma(dados, contentType)
+    const result = await controllerIdioma.inserirNovoIdioma(
+        dados,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para listar idiomas
 router.get('/', async function(request, response){
 
-    let result = await controllerIdioma.listarIdioma()
+    const result = await controllerIdioma.listarIdioma()
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para buscar idioma pelo ID
 router.get('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerIdioma.buscarIdioma(id)
+    const result = await controllerIdioma.buscarIdioma(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para atualizar idioma
-router.put('/:id', bodyParserJSON, async function(request, response){
+router.put('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerIdioma.atualizarIdioma(dados, id, contentType)
+    const result = await controllerIdioma.atualizarIdioma(
+        dados,
+        id,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
 // Endpoint para deletar idioma
 router.delete('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerIdioma.excluirIdioma(id)
+    const result = await controllerIdioma.excluirIdioma(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-module.exports = router 
+module.exports = router

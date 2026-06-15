@@ -1,66 +1,69 @@
+//Dependências
 const express           = require('express')
 const router            = express.Router()
-const bodyParserJSON    = require('body-parser')
 
-const controllerPessoa  = require('../controller/pessoa/controller_pessoa.js')
+//Importando arquivo pessoa da controller
+const controllerPessoa = require('../controller/pessoa/controller_pessoa.js')
 
-// Endpoint para inserir tipo telefone
-router.post('/', bodyParserJSON, async function(request, response){
+// Endpoint para inserir pessoa
+router.post('/', async function(request, response){
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerPessoa.inserirNovaPessoa(dados, contentType)
+    const result = await controllerPessoa.inserirNovaPessoa(
+        dados,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para listar tipos de telefone
+// Endpoint para listar pessoas
 router.get('/', async function(request, response){
 
-    let result = await controllerPessoa.listarPessoas()
+    const result = await controllerPessoa.listarPessoas()
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para buscar tipo telefone pelo ID
+// Endpoint para buscar pessoa pelo ID
 router.get('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerPessoa.buscarByIdPessoa(id)
+    const result = await controllerPessoa.buscarByIdPessoa(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para atualizar tipo telefone
-router.put('/:id', bodyParserJSON, async function(request, response){
+// Endpoint para atualizar pessoa
+router.put('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let dados = request.body
+    const dados = request.body
 
-    let contentType = request.headers['content-type']
+    const contentType = request.headers['content-type']
 
-    let result = await controllerPessoa.atualizarPessoa(dados, id, contentType)
+    const result = await controllerPessoa.atualizarPessoa(
+        dados,
+        id,
+        contentType
+    )
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-// Endpoint para deletar tipo telefone
+// Endpoint para deletar pessoa
 router.delete('/:id', async function(request, response){
 
-    let id = request.params.id
+    const id = request.params.id
 
-    let result = await controllerPessoa.excluirByIdPessoa(id)
+    const result = await controllerPessoa.excluirByIdPessoa(id)
 
-    response.status(result.status_code)
-    response.json(result)
+    return response.status(result.status_code).json(result)
 })
 
-module.exports = router 
+module.exports = router
